@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "demo.at.ram.data"
+    namespace = "demo.at.ram.shared"
     compileSdk = 35
 
     defaultConfig {
@@ -36,7 +36,6 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":shared"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -49,3 +48,13 @@ dependencies {
     testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+//tasks.named<Test>("testDebugUnitTest") {
+//    useJUnitPlatform()
+//    jvmArgs("-XX:+EnableDynamicAgentLoading")
+//}
+
+//tasks.withType<Test> {
+//    useJUnitPlatform()
+//    jvmArgs("-XX:+EnableDynamicAgentLoading")
+//}

@@ -1,4 +1,4 @@
-package demo.at.ram.presentation
+package demo.at.ram.shared
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

@@ -23,3 +23,4 @@ rootProject.name = "Rick And Morty"
 include(":data")
 include(":domain")
 include(":presentation")
+include(":shared")
