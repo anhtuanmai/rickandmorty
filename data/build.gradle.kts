@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.mannodermaus.android.junit5)
 }
 
 android {
     namespace = "demo.at.ram.data"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -39,13 +40,22 @@ dependencies {
     implementation(project(":shared"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
     //Testing
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.coroutines)
     testImplementation(libs.mockk)
+    androidTestImplementation(libs.junit.jupiter.api)
+    androidTestImplementation(libs.junit.jupiter.engine)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+//EnableDynamicAgentLoading for Mockk
+afterEvaluate {
+    tasks.named<Test>("testDebugUnitTest") {
+        useJUnitPlatform()
+        jvmArgs("-XX:+EnableDynamicAgentLoading")
+    }
+}
+

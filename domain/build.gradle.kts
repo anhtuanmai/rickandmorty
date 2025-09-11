@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "demo.at.ram.domain"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -54,6 +54,8 @@ dependencies {
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.coroutines)
     testImplementation(libs.mockk)
+    androidTestImplementation(libs.junit.jupiter.api)
+    androidTestImplementation(libs.junit.jupiter.engine)
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
