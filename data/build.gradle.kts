@@ -1,7 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android.ksp)
+    alias(libs.plugins.hilt.android)
     alias(libs.plugins.mannodermaus.android.junit5)
+    alias(libs.plugins.room)
+    alias(libs.plugins.apter.junit5)
 }
 
 android {
@@ -28,6 +32,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 kotlin {
@@ -38,14 +45,24 @@ kotlin {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.room)
+    ksp(libs.room.compiler)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.gson)
 
     //Testing
+    testImplementation(libs.coroutines)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
-    testImplementation(libs.coroutines)
     testImplementation(libs.mockk)
+    testImplementation(libs.robolectric)
+    androidTestImplementation(libs.coroutines)
     androidTestImplementation(libs.junit.jupiter.api)
     androidTestImplementation(libs.junit.jupiter.engine)
     androidTestImplementation(libs.androidx.espresso.core)

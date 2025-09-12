@@ -2,15 +2,20 @@
 agp = "8.9.3"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
-espressoCore = "3.7.0"
 appcompat = "1.7.1"
 material = "1.13.0"
 hiltVersion = "2.56.2"
 kspVersion = "2.2.10-2.0.2"
 gsonVersion = "2.13.1"
-junitJupiter = "5.12.2"
-mockk = "1.14.5"
 coroutinesVersion = "1.10.2"
+retrofit = "3.0.0"
+room = "2.8.0"
+
+espressoCore = "3.7.0"
+robolectric = "4.16"
+apterJunit5 = "0.9.0"
+junitJupiter = "5.13.4"
+mockk = "1.14.5"
 androidJunit5 = "1.13.4.0"
 
 [libraries]
@@ -20,6 +25,11 @@ material = { group = "com.google.android.material", name = "material", version.r
 hilt-android = { group = "com.google.dagger", name = "hilt-android" , version.ref = "hiltVersion"}
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler" , version.ref = "hiltVersion"}
 gson = { group = "com.google.code.gson", name = "gson" , version.ref = "gsonVersion"}
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit" , version.ref = "retrofit"}
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson" , version.ref = "retrofit"}
+room = { group = "androidx.room", name = "room-runtime" , version.ref = "room"}
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
@@ -35,5 +45,6 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android-ksp = { id = "com.google.devtools.ksp", version.ref ="kspVersion" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref ="hiltVersion" }
 mannodermaus-android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref ="androidJunit5" }
-
+room = { id = "androidx.room", version.ref ="room" }
+apter-junit5 = { id = "tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin", version.ref = "apterJunit5"}
 

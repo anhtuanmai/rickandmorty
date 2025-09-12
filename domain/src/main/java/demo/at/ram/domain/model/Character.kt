@@ -2,9 +2,9 @@ package demo.at.ram.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-data class CharacterEntity(
+data class Character(
     @SerializedName("id")
-    var id: Int? = null,
+    var id: Long? = null,
     @SerializedName("name")
     var name: String? = null,
     @SerializedName("status")
@@ -16,9 +16,9 @@ data class CharacterEntity(
     @SerializedName("gender")
     var gender: String? = null,
     @SerializedName("origin")
-    var origin: OriginEntity? = OriginEntity(),
+    var origin: Origin? = Origin(),
     @SerializedName("location")
-    var location: LocationEntity? = LocationEntity(),
+    var location: Location? = Location(),
     @SerializedName("image")
     var image: String? = null,
     @SerializedName("episode")
