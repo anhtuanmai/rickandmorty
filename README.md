@@ -1,13 +1,8 @@
 # Android Mobile Application (Kotlin + Clean Architecture)
 
-┌─────────────────────┐    ┌──────────────────────────────────┐
-│  Domain Layer       │◄───│  Data Layer                      │
-│  (Interface)        │    │  (Implementation + Module)       │
-└─────────────────────┘    └──────────────────────────────────┘
-          ▲                         ▲
-          │                         │
-          │                         │
-┌─────────────────────────────────────────┐
-│  Presentation Layer                     │
-└─────────────────────────────────────────┘
+Domain Layer (Interface) ←── Data Layer (Implementation + Module)
+      ↑                              ↑
+      │                              │
+Presentation Layer ──────────────────┘
+
 
