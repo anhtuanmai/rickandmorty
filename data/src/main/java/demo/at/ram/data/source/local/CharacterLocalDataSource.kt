@@ -1,17 +1,21 @@
 package demo.at.ram.data.source.local
 
 import demo.at.ram.data.source.local.dao.CharacterDao
+import demo.at.ram.data.source.local.entity.CharacterEntity
+import javax.inject.Inject
 
 /**
  * Local character data source
  */
-class CharacterLocalDataSource {
+class CharacterLocalDataSource @Inject constructor(
+    private val characterDao: CharacterDao
+) {
 
-    suspend fun loadCharacters() : List<CharacterDao> {
-        throw NotImplementedError()
+    suspend fun loadCharacters() : List<CharacterEntity> {
+        return characterDao.getAll()
     }
 
-    suspend fun saveCharacters(characters: List<CharacterDao>) : Boolean {
-        throw NotImplementedError()
+    suspend fun saveCharacters(characters: List<CharacterEntity>) : List<Long> {
+        return characterDao.insertAll(characters)
     }
 }

@@ -1,10 +1,17 @@
 package demo.at.ram.data.source.local.dao
 
-import demo.at.ram.domain.model.CharacterEntity
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import demo.at.ram.data.source.local.entity.CharacterEntity
 
-class CharacterDao {
+@Dao
+interface CharacterDao {
 
-    fun toEntity(): CharacterEntity {
-        throw NotImplementedError()
-    }
+    @Query("SELECT * FROM ${CharacterEntity.TABLE_NAME} ORDER BY id ASC")
+    suspend fun getAll(): List<CharacterEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(users: List<CharacterEntity>) : List<Long>
 }

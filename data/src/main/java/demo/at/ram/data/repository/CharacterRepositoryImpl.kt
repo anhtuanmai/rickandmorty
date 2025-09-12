@@ -2,7 +2,7 @@ package demo.at.ram.data.repository
 
 import demo.at.ram.data.source.local.CharacterLocalDataSource
 import demo.at.ram.data.source.remote.CharacterRemoteDataSource
-import demo.at.ram.domain.model.CharacterEntity
+import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.repository.CharacterRepository
 import demo.at.ram.shared.model.EnumResponseStatus
 import demo.at.ram.shared.model.ResponseResult
@@ -12,7 +12,7 @@ class CharacterRepositoryImpl @Inject constructor(
     private val remoteDataSource: CharacterRemoteDataSource,
     private val localDataSource: CharacterLocalDataSource,
 ) : CharacterRepository {
-    override suspend fun getAllCharacters(): ResponseResult<out List<CharacterEntity>> {
+    override suspend fun getAllCharacters(): ResponseResult<out List<Character>> {
         val response = remoteDataSource.getAllCharacters()
         return when (response.code()) {
             in 200..299 ->
@@ -38,8 +38,8 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSavedCharacters(): List<CharacterEntity> {
-        return localDataSource.loadCharacters().map { it.toEntity() }
+    override suspend fun getSavedCharacters(): List<Character> {
+        return localDataSource.loadCharacters().map { it.toDomainModel() }
     }
 
 }

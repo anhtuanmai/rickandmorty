@@ -1,6 +1,6 @@
 package demo.at.ram.domain.usecase
 
-import demo.at.ram.domain.model.CharacterEntity
+import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.repository.CharacterRepository
 import demo.at.ram.shared.model.EnumResponseStatus
 import demo.at.ram.shared.model.ResponseResult
@@ -29,12 +29,12 @@ class GetAllCharactersTest {
     @Test
     fun `should return characters when repository succeeds`() = runTest {
         //Given
-        val expectedResult = ResponseResult<List<CharacterEntity>>(
+        val expectedResult = ResponseResult<List<Character>>(
             status = EnumResponseStatus.SUCCESS,
             code = 200,
             data = listOf(
-                CharacterEntity(id = 1, name = "Rick Sanchez"),
-                CharacterEntity(id = 2, name = "Morty Smith")
+                Character(id = 1, name = "Rick Sanchez"),
+                Character(id = 2, name = "Morty Smith")
             ),
         )
         coEvery { characterRepository.getAllCharacters() } returns expectedResult
