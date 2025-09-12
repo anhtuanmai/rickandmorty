@@ -12,6 +12,7 @@ junitJupiter = "5.12.2"
 mockk = "1.14.5"
 coroutinesVersion = "1.10.2"
 androidJunit5 = "1.13.4.0"
+retrofit = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -20,7 +21,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 hilt-android = { group = "com.google.dagger", name = "hilt-android" , version.ref = "hiltVersion"}
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler" , version.ref = "hiltVersion"}
 gson = { group = "com.google.code.gson", name = "gson" , version.ref = "gsonVersion"}
-
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit" , version.ref = "retrofit"}
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson" , version.ref = "retrofit"}
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junitJupiter" }

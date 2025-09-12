@@ -2,8 +2,8 @@ package demo.at.ram.domain.usecase
 
 import demo.at.ram.domain.model.CharacterEntity
 import demo.at.ram.domain.repository.CharacterRepository
-import demo.at.ram.shared.model.EnumResultStatus
-import demo.at.ram.shared.model.Result
+import demo.at.ram.shared.model.EnumResponseStatus
+import demo.at.ram.shared.model.ResponseResult
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
@@ -29,12 +29,13 @@ class GetAllCharactersTest {
     @Test
     fun `should return characters when repository succeeds`() = runTest {
         //Given
-        val expectedResult = Result<List<CharacterEntity>>(
+        val expectedResult = ResponseResult<List<CharacterEntity>>(
+            status = EnumResponseStatus.SUCCESS,
+            code = 200,
             data = listOf(
                 CharacterEntity(id = 1, name = "Rick Sanchez"),
                 CharacterEntity(id = 2, name = "Morty Smith")
             ),
-            status = EnumResultStatus.SUCCESS
         )
         coEvery { characterRepository.getAllCharacters() } returns expectedResult
 
