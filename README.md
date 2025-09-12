@@ -1,7 +1,7 @@
 # Android Mobile Application (Kotlin + Clean Architecture)
 
 ```mermaid
-block-beta
+block
     columns 3
     
     space:1
