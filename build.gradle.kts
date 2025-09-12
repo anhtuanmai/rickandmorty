@@ -5,36 +5,102 @@ plugins {
     alias(libs.plugins.android.library) apply false
 }
 
-// Unit tests only
-tasks.register("runAllUnitTests") {
+// Run tests with/without reports
+tasks.register("runAllUnitTestsNoReport") {
     group = "verification"
-    description = "Runs all unit tests for all modules"
+    description = "Runs all unit tests without generating reports"
 
-    dependsOn(provider {
-        subprojects.mapNotNull { project ->
-            project.tasks.findByName("testDebugUnitTest") ?: project.tasks.findByName("test")
-        }
-    })
+    val unitTestTasks = subprojects.mapNotNull { project ->
+        project.tasks.findByName("testDebugUnitTest") ?:
+        project.tasks.findByName("test")
+    }
+
+    // Disable reports for performance
+    unitTestTasks.forEach { testTask ->
+        (testTask as? Test)?.reports?.html?.required?.set(false)
+        (testTask as? Test)?.reports?.junitXml?.required?.set(false)
+    }
+
+    dependsOn(unitTestTasks)
+
+    doLast {
+        println("All unit tests completed (no reports generated)")
+    }
 }
 
-// Instrumented tests only
-tasks.register("runAllInstrumentedTests") {
+tasks.register<TestReport>("runAllUnitTestsWithReport") {
     group = "verification"
-    description = "Runs all instrumented tests for all modules"
+    description = "Runs all unit tests and generates aggregated HTML report"
 
-    dependsOn(provider {
-        subprojects.mapNotNull { project ->
-            project.tasks.findByName("connectedDebugAndroidTest")
-        }
-    })
+    destinationDirectory = layout.buildDirectory.dir("reports/tests/allUnitTests")
+
+    val unitTestTasks = subprojects.mapNotNull { project ->
+        project.tasks.findByName("testDebugUnitTest") as? Test ?:
+        project.tasks.findByName("test") as? Test
+    }
+
+    unitTestTasks.forEach { testTask ->
+        testTask.reports.html.required.set(true)
+        testTask.reports.junitXml.required.set(true)
+    }
+
+    dependsOn(unitTestTasks)
+    testResults.from(unitTestTasks)
+
+    doLast {
+        val reportPath = destinationDirectory.get().asFile.absolutePath
+        println()
+        println("> Report :allModules:unitTests")
+        println("  ${reportPath}/index.html")
+        println()
+    }
 }
 
-// Combined task
-tasks.register("runAllTests") {
+tasks.register("runAllInstrumentedTestsNoReport") {
     group = "verification"
-    description = "Runs all unit and instrumented tests for all modules"
+    description = "Runs all instrumented tests without generating reports"
 
-    dependsOn("runAllUnitTests")
-    // Only depend on instrumented tests if you have devices connected
-    dependsOn("runAllInstrumentedTests")
+    val instrumentedTestTasks = subprojects.mapNotNull { project ->
+        project.tasks.findByName("connectedDebugAndroidTest") ?:
+        project.tasks.findByName("connectedAndroidTest")
+    }
+
+    // Disable reports for performance
+    instrumentedTestTasks.forEach { testTask ->
+        (testTask as? Test)?.reports?.html?.required?.set(false)
+        (testTask as? Test)?.reports?.junitXml?.required?.set(false)
+    }
+
+    dependsOn(instrumentedTestTasks)
+
+    doLast {
+        println("All instrumented tests completed (no reports generated)")
+    }
+}
+
+tasks.register("runAllInstrumentedTestsWithReport") {
+    group = "verification"
+    description = "Runs all instrumented tests and shows individual reports"
+
+    val instrumentedTestTasks = subprojects.mapNotNull { project ->
+        project.tasks.findByName("connectedDebugAndroidTest") ?:
+        project.tasks.findByName("connectedAndroidTest")
+    }
+
+    dependsOn(instrumentedTestTasks)
+
+    doLast {
+        println("All instrumented tests completed!")
+        println()
+
+        subprojects.forEach { project ->
+            val indexFile = project.layout.buildDirectory.file("reports/androidTests/connected/debug/index.html").get().asFile
+
+            if (indexFile.exists()) {
+                println("> Report :${project.name}:instrumentedTests")
+                println("  ${indexFile.absolutePath}")
+            }
+        }
+        println()
+    }
 }
