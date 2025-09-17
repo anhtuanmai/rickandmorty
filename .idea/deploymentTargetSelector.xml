@@ -4,9 +4,14 @@
     <selectionStates>
       <SelectionState runConfigName="presentation">
         <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="CharacterDaoTest">
-        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-09-17T19:37:00.357000461Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="Default" identifier="serial=192.168.1.14:5555;connection=1f71e217" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
     </selectionStates>
   </component>

@@ -39,13 +39,11 @@ kotlin {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
     //Testing
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
-    testImplementation(libs.coroutines)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
     androidTestImplementation(libs.junit.jupiter.api)
     androidTestImplementation(libs.junit.jupiter.engine)
