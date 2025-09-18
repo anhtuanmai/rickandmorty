@@ -14,8 +14,6 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import demo.at.ram.presentation.navigation.RamNavHost
 import demo.at.ram.presentation.navigation.TopLevelDestination
-import timber.log.Timber
-import kotlin.reflect.KClass
 
 @Composable
 fun RamApp(
@@ -23,12 +21,6 @@ fun RamApp(
     modifier: Modifier = Modifier
 ) {
     val currentDestination = appState.currentDestination
-    Timber.i("currentDestination : $currentDestination")
-    currentDestination?.let {
-        it.hierarchy.forEach {
-            Timber.i("hierarchy : $it")
-        }
-    }
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -41,15 +33,9 @@ fun RamApp(
                                 contentDescription = stringResource(destination.contentDescription)
                             )
                         },
-                        label = {
-                            Timber.i("destination $destination : selected = ${currentDestination.isRouteInHierarchy(destination::class)}")
-                            Text(stringResource(destination.label))
-                        },
-                        selected = currentDestination.isRouteInHierarchy(destination::class),
-                        onClick = {
-                            Timber.i("onClick : ${destination.route}")
-//                            appState.navController.navigate(destination.route)
-                        }
+                        label = { Text(stringResource(destination.label)) },
+                        selected = currentDestination.isRouteInHierarchy(destination.route),
+                        onClick = { appState.navController.navigate(destination.route) }
                     )
 
                 }
@@ -65,7 +51,5 @@ fun RamApp(
     }
 }
 
-private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
-    this?.hierarchy?.any {
-        it.hasRoute(route)
-    } == true
+private fun NavDestination?.isRouteInHierarchy(route: Any) =
+    this?.hierarchy?.any { it.hasRoute(route::class) } == true

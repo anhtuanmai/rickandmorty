@@ -28,21 +28,21 @@ fun RamNavHost(
 ) {
     NavHost(
         navController = appState.navController,
-        startDestination = HomeBaseRoute.toString(),
+        startDestination = HomeBaseRoute,
         modifier = modifier
     ) {
-        navigation(route = HomeBaseRoute.toString(), startDestination = HomeRoute.toString()) {
-            composable(route = HomeRoute.toString()) {
+        navigation<HomeBaseRoute>(startDestination = HomeRoute) {
+            composable<HomeRoute> {
                 HomeScreen()
             }
-            composable(route = DetailRoute.toString()) {
+            composable<DetailRoute> {
                 DetailsScreen()
             }
         }
-        composable(route = FavoriteRoute.toString()) {
+        composable<FavoriteRoute> {
             FavoritesScreen()
         }
-        composable(route = AboutRoute.toString()) {
+        composable<AboutRoute> {
             AboutScreen()
         }
     }

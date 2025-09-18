@@ -7,30 +7,29 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.ui.graphics.vector.ImageVector
 import demo.at.ram.presentation.R
-import kotlin.reflect.KClass
 
 enum class TopLevelDestination(
     @StringRes val label: Int,
     val icon: ImageVector,
     @StringRes val contentDescription: Int,
-    val route: KClass<*>
+    val route: Any
 ) {
     HOME(
         label = R.string.home,
         icon = Icons.Default.Home,
         contentDescription = R.string.home,
-        route = HomeBaseRoute::class
+        route = HomeBaseRoute
     ),
     FAVORITES(
         label = R.string.favorites,
         icon = Icons.Default.Favorite,
         contentDescription = R.string.favorites,
-        route = FavoriteRoute::class
+        route = FavoriteRoute
     ),
     ABOUT(
         label = R.string.about,
         icon = Icons.Default.Info,
         contentDescription = R.string.about,
-        route = AboutRoute::class
+        route = AboutRoute
     ),
 }
