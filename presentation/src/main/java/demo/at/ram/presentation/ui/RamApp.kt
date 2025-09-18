@@ -8,7 +8,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -22,6 +24,7 @@ fun RamApp(
 ) {
     val currentDestination = appState.currentDestination
     Scaffold(
+        containerColor = Color.LightGray, //TODO: remove background color later
         modifier = modifier,
         bottomBar = {
             NavigationBar {
@@ -37,11 +40,8 @@ fun RamApp(
                         selected = currentDestination.isRouteInHierarchy(destination.route),
                         onClick = { appState.navController.navigate(destination.route) }
                     )
-
                 }
-
             }
-
         }
     ) { contentPadding ->
         RamNavHost(

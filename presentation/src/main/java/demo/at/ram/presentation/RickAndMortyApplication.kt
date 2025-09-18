@@ -4,9 +4,10 @@ import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy.Builder
-import android.util.Log
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+@HiltAndroidApp
 class RickAndMortyApplication : Application() {
 
     override fun onCreate() {
@@ -14,6 +15,10 @@ class RickAndMortyApplication : Application() {
 
         setStrictModePolicy()
 
+        setLogger()
+    }
+
+    private fun setLogger() {
         if (isDebuggable()) {
             Timber.plant(Timber.DebugTree())
             Timber.i("Timber is initialized.")
@@ -35,6 +40,7 @@ class RickAndMortyApplication : Application() {
      */
     private fun setStrictModePolicy() {
         if (isDebuggable()) {
+            Timber.w("StrictModePolicy is enabled.")
             StrictMode.setThreadPolicy(
                 Builder().detectAll().penaltyLog().build(),
             )

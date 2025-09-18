@@ -1,4 +1,4 @@
-package demo.at.ram.presentation.ui.theme
+package demo.at.ram.presentation.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

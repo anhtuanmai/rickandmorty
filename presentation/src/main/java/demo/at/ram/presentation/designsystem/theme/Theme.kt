@@ -1,4 +1,4 @@
-package demo.at.ram.presentation.ui.theme
+package demo.at.ram.presentation.designsystem.theme
 
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast

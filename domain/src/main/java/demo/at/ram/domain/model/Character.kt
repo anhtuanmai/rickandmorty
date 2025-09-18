@@ -1,7 +1,9 @@
 package demo.at.ram.domain.model
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Character(
     @SerializedName("id")
     var id: Long? = null,

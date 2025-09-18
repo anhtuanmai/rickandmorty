@@ -4,14 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.remember
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import demo.at.ram.presentation.ui.RamApp
-import demo.at.ram.presentation.ui.RamAppState
 import demo.at.ram.presentation.ui.rememberAppState
-import demo.at.ram.presentation.ui.theme.RickAndMortyTheme
+import demo.at.ram.presentation.designsystem.theme.RickAndMortyTheme
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()

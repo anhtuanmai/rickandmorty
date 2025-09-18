@@ -2,7 +2,6 @@ package demo.at.ram.domain.usecase
 
 import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.repository.CharacterRepository
-import demo.at.ram.shared.model.EnumResponseStatus
 import demo.at.ram.shared.model.ResponseResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -18,19 +17,19 @@ class GetAllCharactersTest {
     @MockK
     private lateinit var characterRepository: CharacterRepository
 
-    private lateinit var getAllCharactersUseCase: GetAllCharacters
+    private lateinit var getAllCharactersUseCase: GetAllCharactersUseCase
 
     @BeforeEach
     fun setup() {
         characterRepository = mockk<CharacterRepository>()
-        getAllCharactersUseCase = GetAllCharacters(characterRepository)
+        getAllCharactersUseCase = GetAllCharactersUseCase(characterRepository)
     }
 
     @Test
     fun `should return characters when repository succeeds`() = runTest {
         //Given
         val expectedResult = ResponseResult<List<Character>>(
-            status = EnumResponseStatus.SUCCESS,
+            isSuccessful = true,
             code = 200,
             data = listOf(
                 Character(id = 1, name = "Rick Sanchez"),

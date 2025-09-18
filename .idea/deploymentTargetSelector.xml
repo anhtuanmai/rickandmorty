@@ -4,14 +4,17 @@
     <selectionStates>
       <SelectionState runConfigName="presentation">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-09-17T19:37:00.357000461Z">
+        <DropdownSelection timestamp="2025-09-18T15:41:27.006617797Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="Default" identifier="serial=192.168.1.14:5555;connection=1f71e217" />
+              <DeviceId pluginId="Default" identifier="serial=192.168.1.14:5555;connection=68cf8acb" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="TextPreview">
+        <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
   </component>

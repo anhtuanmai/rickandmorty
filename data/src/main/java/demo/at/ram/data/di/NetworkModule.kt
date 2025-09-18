@@ -25,10 +25,10 @@ object NetworkModule {
             coerceInputValues = true
         }
             .asConverterFactory("application/json".toMediaType())
-        return Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(converterFactory)
             .build()
-            .create(RamService::class.java)
+        return retrofit.create(RamService::class.java)
     }
 }

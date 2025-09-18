@@ -1,7 +1,9 @@
 package demo.at.ram.data.source.remote.model
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RestInfo(
     @SerializedName("count") val count: Int?,
     @SerializedName("pages") val pages: Int?,

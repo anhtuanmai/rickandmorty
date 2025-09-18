@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.room)
     alias(libs.plugins.apter.junit5)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -29,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     room {
         schemaDirectory("$projectDir/schemas")
@@ -39,7 +40,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
@@ -48,8 +49,6 @@ dependencies {
     implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.retrofit.core)
@@ -57,6 +56,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.gson)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     //Testing
     testImplementation(libs.kotlinx.coroutines.test)

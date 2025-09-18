@@ -15,7 +15,7 @@
     </style>
 
     <style name="Theme.Ram.Splash" parent="NightAdjusted.Theme.Splash">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/rick_and_morty_100_icons8</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/rick_and_morty_400_icons8</item>
         <item name="postSplashScreenTheme">@style/Theme.Ram</item>
     </style>
 </resources>

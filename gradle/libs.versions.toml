@@ -54,6 +54,7 @@ truth = "1.4.4"
 turbine = "1.2.0"
 gson = "2.13.2"
 timber = "5.0.0"
+javapoet = "1.13.0"
 
 androidJunit5 = "1.13.4.0"
 apterJunit5 = "0.9.0"
@@ -128,6 +129,7 @@ lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = 
 lint-checks = { group = "com.android.tools.lint", name = "lint-checks", version.ref = "androidTools" }
 lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "androidTools" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
