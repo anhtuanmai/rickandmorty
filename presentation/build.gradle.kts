@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android.ksp)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -54,30 +55,30 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":data"))
     implementation(project(":domain"))
-
     implementation(platform(libs.androidx.compose.bom))
+
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.navigationSuite)
     implementation(libs.androidx.compose.runtime)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.compose.material.iconsExtended )
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.activity.compose)
+    implementation(libs.kotlinx.coroutines.core)
     implementation(libs.timber)
+    ksp(libs.hilt.compiler)
+    implementation(libs.kotlinx.serialization.json)
 
     //Testing
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.junit.jupiter.api)
+    androidTestImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
-    androidTestImplementation(libs.junit.jupiter.api)
-    androidTestImplementation(libs.junit.jupiter.engine)
-    androidTestImplementation(libs.androidx.espresso.core)
 }
 
 //EnableDynamicAgentLoading for Mockk

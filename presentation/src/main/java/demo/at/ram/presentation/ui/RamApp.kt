@@ -2,8 +2,8 @@ package demo.at.ram.presentation.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationRail
-import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,8 +12,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import demo.at.ram.presentation.navigation.TopLevelDestination
 import demo.at.ram.presentation.navigation.RamNavHost
+import demo.at.ram.presentation.navigation.TopLevelDestination
 import timber.log.Timber
 import kotlin.reflect.KClass
 
@@ -23,30 +23,44 @@ fun RamApp(
     modifier: Modifier = Modifier
 ) {
     val currentDestination = appState.currentDestination
-    Scaffold(
-        modifier = modifier
-
-    ) { contentPadding ->
-        NavigationRail(modifier = Modifier.padding(contentPadding)) {
-            TopLevelDestination.entries.forEachIndexed{ index, destination ->
-                NavigationRailItem(
-                    icon = {
-                        Icon(
-                            destination.icon,
-                            contentDescription = stringResource(destination.contentDescription)
-                        )
-                    },
-                    label = { Text(stringResource(destination.label)) },
-                    selected = currentDestination.isRouteInHierarchy(destination::class),
-                    onClick = {
-                        Timber.i("onClick : ${destination.name}")
-                        appState.navController.navigate(destination.name)
-                    }
-                )
-            }
+    Timber.i("currentDestination : $currentDestination")
+    currentDestination?.let {
+        it.hierarchy.forEach {
+            Timber.i("hierarchy : $it")
         }
+    }
+    Scaffold(
+        modifier = modifier,
+        bottomBar = {
+            NavigationBar {
+                TopLevelDestination.entries.forEach { destination ->
+                    NavigationBarItem(
+                        icon = {
+                            Icon(
+                                destination.icon,
+                                contentDescription = stringResource(destination.contentDescription)
+                            )
+                        },
+                        label = {
+                            Timber.i("destination $destination : selected = ${currentDestination.isRouteInHierarchy(destination::class)}")
+                            Text(stringResource(destination.label))
+                        },
+                        selected = currentDestination.isRouteInHierarchy(destination::class),
+                        onClick = {
+                            Timber.i("onClick : ${destination.route}")
+//                            appState.navController.navigate(destination.route)
+                        }
+                    )
+
+                }
+
+            }
+
+        }
+    ) { contentPadding ->
         RamNavHost(
-            appState = appState
+            appState = appState,
+            modifier = Modifier.padding(contentPadding)
         )
     }
 }
