@@ -4,11 +4,9 @@ import android.app.Application
 import android.content.pm.ApplicationInfo
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy.Builder
-import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
-@HiltAndroidApp
-class RickAndMortyApplication : Application() {
+open class RickAndMortyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

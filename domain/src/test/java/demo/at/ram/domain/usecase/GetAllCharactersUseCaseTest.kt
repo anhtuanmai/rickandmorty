@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class GetAllCharactersTest {
+class GetAllCharactersUseCaseTest {
 
     @MockK
     private lateinit var characterRepository: CharacterRepository
