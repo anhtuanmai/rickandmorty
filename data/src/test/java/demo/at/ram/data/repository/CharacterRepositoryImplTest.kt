@@ -12,6 +12,8 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,7 +40,7 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun getAllCharacters() = runTest {
+    fun getAllCharacters_testSuccess() = runTest {
         //Given
         val expectedCharacters = listOf(
             Character(id = 1, name = "Rick Sanchez"),
@@ -46,6 +48,11 @@ class CharacterRepositoryImplTest {
         )
         val mockResult = Response.success(RestBody(info = null, results = expectedCharacters))
         coEvery { ramService.getAllCharacters() } returns mockResult
+        coEvery { characterDao.insertAll(any<List<CharacterEntity>>()) } answers {
+            // Return IDs equal to the size of input list
+            val inputList = firstArg<List<CharacterEntity>>()
+            inputList.map { it.id }
+        }
 
         //When
         val characters = repository.getAllCharacters().data
@@ -53,6 +60,28 @@ class CharacterRepositoryImplTest {
         //Then
         assertEquals(expectedCharacters, characters)
         coVerify(exactly = 1) { ramService.getAllCharacters() }
+        coVerify(exactly = 1) { characterDao.insertAll(allAny()) }
+    }
+
+    @Test
+    fun getAllCharacters_testFailure() = runTest {
+        //Given
+        coEvery { ramService.getAllCharacters() } returns
+            Response.error(404, "".toResponseBody())
+
+        coEvery { characterDao.insertAll(any<List<CharacterEntity>>()) } answers {
+            // Return IDs equal to the size of input list
+            val inputList = firstArg<List<CharacterEntity>>()
+            inputList.map { it.id }
+        }
+
+        //When
+        val characters = repository.getAllCharacters().data
+
+        //Then
+        assertEquals(true, characters.isNullOrEmpty())
+        coVerify(exactly = 1) { ramService.getAllCharacters() }
+        coVerify(exactly = 0) { characterDao.insertAll(allAny()) }
     }
 
     @Test
