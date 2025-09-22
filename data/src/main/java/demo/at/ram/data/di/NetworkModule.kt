@@ -5,8 +5,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import demo.at.ram.data.source.remote.RamService
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -17,13 +19,16 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    @Provides
-    @Singleton
-    fun provideRamService(retrofit: Retrofit): RamService =
-        retrofit.create(RamService::class.java)
+    fun provideRamService(): RamService {
+        val converterFactory = Json {
+            ignoreUnknownKeys = true
+            coerceInputValues = true
+        }
+            .asConverterFactory("application/json".toMediaType())
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(converterFactory)
+            .build()
+        return retrofit.create(RamService::class.java)
+    }
 }

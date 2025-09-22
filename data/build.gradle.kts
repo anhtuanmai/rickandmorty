@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.room)
     alias(libs.plugins.apter.junit5)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -29,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     room {
         schemaDirectory("$projectDir/schemas")
@@ -39,7 +40,7 @@ android {
 
 kotlin {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
@@ -48,21 +49,24 @@ dependencies {
     implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.room)
+    implementation(libs.room.runtime)
     ksp(libs.room.compiler)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.kotlin.serialization)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okhttp)
     implementation(libs.gson)
 
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
     //Testing
-    testImplementation(libs.coroutines)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.mockk)
     testImplementation(libs.robolectric)
-    androidTestImplementation(libs.coroutines)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.junit.jupiter.api)
     androidTestImplementation(libs.junit.jupiter.engine)
     androidTestImplementation(libs.androidx.espresso.core)

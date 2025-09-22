@@ -5,7 +5,7 @@ import demo.at.ram.domain.repository.CharacterRepository
 import demo.at.ram.shared.model.ResponseResult
 import javax.inject.Inject
 
-class GetAllCharacters @Inject constructor(
+class GetAllCharactersUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
     suspend operator fun invoke(): ResponseResult<out List<Character>> {
