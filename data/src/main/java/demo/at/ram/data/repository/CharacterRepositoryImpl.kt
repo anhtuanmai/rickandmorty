@@ -5,6 +5,7 @@ import demo.at.ram.data.source.local.entity.CharacterEntity
 import demo.at.ram.data.source.remote.CharacterRemoteDataSource
 import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.repository.CharacterRepository
+import demo.at.ram.shared.model.SourceOrigin
 import demo.at.ram.shared.model.ResponseResult
 import timber.log.Timber
 import javax.inject.Inject
@@ -14,37 +15,39 @@ class CharacterRepositoryImpl @Inject constructor(
     private val localDataSource: CharacterLocalDataSource,
 ) : CharacterRepository {
     override suspend fun getAllCharacters(): ResponseResult<out List<Character>> {
-        val response = remoteDataSource.getAllCharacters()
-        val result = when (response.code()) {
-            in 200..299 ->
-                ResponseResult(
-                    isSuccessful = true,
-                    code = response.code(),
-                    data = response.body()?.results
-                )
-
-            in 400..499 ->
-                ResponseResult(
-                    isSuccessful = false, code = response.code()
-                )
-
-            in 500..599 ->
-                ResponseResult(
-                    isSuccessful = false,
-                    code = response.code()
-                )
-
-            else ->
-                ResponseResult(isSuccessful = false, code = response.code())
-        }
-        if (result.isSuccessful) {
+        val remoteResponse = remoteDataSource.getAllCharacters()
+        val result : ResponseResult<out List<Character>>
+        if (remoteResponse.isSuccessful) {
             Timber.d("Remote data loaded successfully.")
-            result.data?.let {
+            result = ResponseResult.success(
+                code = remoteResponse.code(),
+                data = remoteResponse.body()?.results?: emptyList()
+            )
+            remoteResponse.body()?.results?.let {
                 val entities = it.map { CharacterEntity(it) }
                 val saved = localDataSource.saveCharacters(entities)
                 Timber.d("Saved ${saved.size}/${it.size} characters.")
             } ?: {
                 Timber.w("Remote data is empty.")
+            }
+        } else {
+            Timber.w("Remote data loading failed. Try to load from local db.")
+            val localCharacters = localDataSource.loadCharacters()
+            result = if (localCharacters.isNotEmpty()) {
+                Timber.d("Loaded ${localCharacters.size} from local db.")
+                ResponseResult(
+                    isSuccessful = true,
+                    remoteCode = remoteResponse.code(),
+                    data = localCharacters.map { it.toDomainModel() },
+                    sourceOrigin = SourceOrigin.LOCAL
+                )
+            } else {
+                Timber.d("No character found from local db.")
+                ResponseResult(
+                    isSuccessful = false,
+                    remoteCode = remoteResponse.code(),
+                    data = null,
+                )
             }
         }
         return result

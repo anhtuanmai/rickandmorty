@@ -8,6 +8,7 @@ import demo.at.ram.data.di.RepositoryModule
 import demo.at.ram.domain.repository.CharacterRepository
 import javax.inject.Singleton
 
+@Suppress("unused")
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],

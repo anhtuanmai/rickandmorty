@@ -30,7 +30,7 @@ class GetAllCharactersUseCaseTest {
         //Given
         val expectedResult = ResponseResult<List<Character>>(
             isSuccessful = true,
-            code = 200,
+            remoteCode = 200,
             data = listOf(
                 Character(id = 1, name = "Rick Sanchez"),
                 Character(id = 2, name = "Morty Smith")

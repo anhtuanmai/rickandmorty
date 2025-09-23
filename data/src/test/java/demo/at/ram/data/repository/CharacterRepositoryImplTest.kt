@@ -7,12 +7,12 @@ import demo.at.ram.data.source.remote.CharacterRemoteDataSource
 import demo.at.ram.data.source.remote.RamService
 import demo.at.ram.data.source.remote.model.RestBody
 import demo.at.ram.domain.model.Character
+import demo.at.ram.shared.model.SourceOrigin
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -40,8 +40,8 @@ class CharacterRepositoryImplTest {
     }
 
     @Test
-    fun getAllCharacters_testSuccess() = runTest {
-        //Given
+    fun getAllCharacters_testSuccessRemote() = runTest {
+        // Given : Remote OK
         val expectedCharacters = listOf(
             Character(id = 1, name = "Rick Sanchez"),
             Character(id = 2, name = "Morty Smith")
@@ -55,32 +55,53 @@ class CharacterRepositoryImplTest {
         }
 
         //When
-        val characters = repository.getAllCharacters().data
+        val response = repository.getAllCharacters()
+        val characters = response.data
 
         //Then
+        assertEquals(true, response.isSuccessful)
+        assertEquals(SourceOrigin.REMOTE, response.sourceOrigin)
         assertEquals(expectedCharacters, characters)
         coVerify(exactly = 1) { ramService.getAllCharacters() }
         coVerify(exactly = 1) { characterDao.insertAll(allAny()) }
     }
 
     @Test
-    fun getAllCharacters_testFailure() = runTest {
-        //Given
-        coEvery { ramService.getAllCharacters() } returns
-            Response.error(404, "".toResponseBody())
-
-        coEvery { characterDao.insertAll(any<List<CharacterEntity>>()) } answers {
-            // Return IDs equal to the size of input list
-            val inputList = firstArg<List<CharacterEntity>>()
-            inputList.map { it.id }
-        }
+    fun getAllCharacters_testSuccessLocal() = runTest {
+        // Given : Remote 404 + not empty db
+        coEvery { ramService.getAllCharacters() } returns Response.error(404, "".toResponseBody())
+        val expectedCharacters = listOf(
+            Character(id = 1, name = "Rick Sanchez"),
+            Character(id = 2, name = "Morty Smith")
+        )
+        coEvery { characterDao.getAll() } returns expectedCharacters.map { CharacterEntity(it) }
 
         //When
-        val characters = repository.getAllCharacters().data
+        val response = repository.getAllCharacters()
+        val characters = response.data
+
+        // Then
+        assertEquals(true, response.isSuccessful)
+        assertEquals(SourceOrigin.LOCAL, response.sourceOrigin)
+        assertEquals(expectedCharacters, characters)
+        coVerify(exactly = 1) { ramService.getAllCharacters() }
+        coVerify(exactly = 1) { characterDao.getAll() }
+    }
+
+    @Test
+    fun getAllCharacters_testFailure() = runTest {
+        // Given : Remote 404 + empty db
+        coEvery { ramService.getAllCharacters() } returns Response.error(404, "".toResponseBody())
+        coEvery { characterDao.getAll() } returns emptyList()
+        coEvery { characterDao.insertAll(allAny()) } returns mockk(relaxed = true)
+
+        //When
+        val response = repository.getAllCharacters()
 
         //Then
-        assertEquals(true, characters.isNullOrEmpty())
+        assertEquals(false, response.isSuccessful)
         coVerify(exactly = 1) { ramService.getAllCharacters() }
+        coVerify(exactly = 1) { characterDao.getAll() }
         coVerify(exactly = 0) { characterDao.insertAll(allAny()) }
     }
 
