@@ -20,15 +20,20 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRamService(): RamService {
-        val converterFactory = Json {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(
+                getJsonOptions()
+                    .asConverterFactory("application/json".toMediaType())
+            )
+            .build()
+        return retrofit.create(RamService::class.java)
+    }
+
+    private fun getJsonOptions(): Json {
+        return Json {
             ignoreUnknownKeys = true
             coerceInputValues = true
         }
-            .asConverterFactory("application/json".toMediaType())
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(converterFactory)
-            .build()
-        return retrofit.create(RamService::class.java)
     }
 }
