@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization)
     alias(libs.plugins.apter.junit5)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -64,7 +66,9 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.firebase.bom))
 
+    implementation(libs.firebase.crashlytics)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.material3)
@@ -74,7 +78,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.kt.compose)
-//    implementation(libs.javapoet)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
 

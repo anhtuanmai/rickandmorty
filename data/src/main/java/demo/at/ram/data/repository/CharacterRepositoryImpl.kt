@@ -5,52 +5,54 @@ import demo.at.ram.data.source.local.entity.CharacterEntity
 import demo.at.ram.data.source.remote.CharacterRemoteDataSource
 import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.repository.CharacterRepository
-import demo.at.ram.shared.model.SourceOrigin
+import demo.at.ram.shared.di.ApplicationScope
+import demo.at.ram.shared.dispatcher.Dispatcher
+import demo.at.ram.shared.dispatcher.RamDispatchers.IO
 import demo.at.ram.shared.model.ResponseResult
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 class CharacterRepositoryImpl @Inject constructor(
     private val remoteDataSource: CharacterRemoteDataSource,
     private val localDataSource: CharacterLocalDataSource,
+    @ApplicationScope private val applicationScope: CoroutineScope,
+    @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
 ) : CharacterRepository {
+
     override suspend fun getAllCharacters(): ResponseResult<out List<Character>> {
-        val remoteResponse = remoteDataSource.getAllCharacters()
-        val result : ResponseResult<out List<Character>>
-        if (remoteResponse.isSuccessful) {
-            Timber.d("Remote data loaded successfully.")
-            result = ResponseResult.success(
-                code = remoteResponse.code(),
-                data = remoteResponse.body()?.results?: emptyList()
+        val wrapper = remoteDataSource.getAllCharacters()
+        val characters = wrapper.response?.body()?.results
+        if (wrapper.isSuccessful()) {
+            cache(characters)
+            return ResponseResult.success(
+                code = wrapper.response?.code(),
+                data = characters?:emptyList()
             )
-            remoteResponse.body()?.results?.let {
-                val entities = it.map { CharacterEntity(it) }
-                val saved = localDataSource.saveCharacters(entities)
-                Timber.d("Saved ${saved.size}/${it.size} characters.")
-            } ?: {
-                Timber.w("Remote data is empty.")
-            }
         } else {
-            Timber.w("Remote data loading failed. Try to load from local db.")
-            val localCharacters = localDataSource.loadCharacters()
-            result = if (localCharacters.isNotEmpty()) {
-                Timber.d("Loaded ${localCharacters.size} from local db.")
-                ResponseResult(
-                    isSuccessful = true,
-                    remoteCode = remoteResponse.code(),
-                    data = localCharacters.map { it.toDomainModel() },
-                    sourceOrigin = SourceOrigin.LOCAL
-                )
-            } else {
-                Timber.d("No character found from local db.")
-                ResponseResult(
-                    isSuccessful = false,
-                    remoteCode = remoteResponse.code(),
-                    data = null,
-                )
+            return loadCharactersFromDb(wrapper.response?.code())
+        }
+    }
+
+    private fun cache(characters: List<Character>?) {
+        applicationScope.launch(ioDispatcher) {
+            characters?.let {
+                localDataSource.saveCharacters(it.map { CharacterEntity(it) })
+            } ?: run {
+                Timber.e("No data found in response")
             }
         }
-        return result
+    }
+
+    private suspend fun loadCharactersFromDb(code: Int?): ResponseResult<out List<Character>> {
+        val characters = localDataSource.loadCharacters().map { it.toDomainModel() }
+        return if (characters.isNotEmpty()) {
+            ResponseResult.success(code = null, data = characters)
+        } else {
+            ResponseResult(isSuccessful = false, httpCode = code, data = null)
+        }
     }
 
     override suspend fun getSavedCharacters(): List<Character> {

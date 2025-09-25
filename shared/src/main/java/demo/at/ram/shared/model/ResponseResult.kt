@@ -5,7 +5,7 @@ package demo.at.ram.shared.model
  */
 data class ResponseResult<T>(
     val isSuccessful: Boolean,
-    val remoteCode: Int?,
+    val httpCode: Int?,
     val data: T? = null,
     val sourceOrigin: SourceOrigin = SourceOrigin.REMOTE,
 ) {
@@ -13,7 +13,7 @@ data class ResponseResult<T>(
         fun <T> success(data: T, code: Int? = null): ResponseResult<out T> {
             return ResponseResult(
                 isSuccessful = true,
-                remoteCode = code,
+                httpCode = code,
                 data = data
             )
         }

@@ -1,5 +1,6 @@
 [versions]
 androidGradlePlugin = "8.9.2"
+googleServicePlugin = "4.4.3"
 androidTestCompose = "1.8.0"
 androidTools = "31.12.2"
 androidxActivity = "1.9.3"
@@ -172,4 +173,6 @@ kotlin-android-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 mannodermaus-android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJunit5" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "room" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServicePlugin" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 
