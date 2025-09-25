@@ -18,7 +18,7 @@ data class Character(
     @SerializedName("gender")
     var gender: String? = null,
     @SerializedName("origin")
-    var origin: Origin? = Origin(),
+    var origin: CharacterOrigin? = CharacterOrigin(),
     @SerializedName("location")
     var location: Location? = Location(),
     @SerializedName("image")
