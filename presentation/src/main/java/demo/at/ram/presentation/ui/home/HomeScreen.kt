@@ -13,7 +13,7 @@ import timber.log.Timber
 
 @Composable
 fun HomeScreen(
-    goToCharacterDetails: () -> Unit,
+    goToCharacterDetails: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsState()
@@ -25,7 +25,10 @@ fun HomeScreen(
 
     HomeContent(
         uiState = uiState.value,
-        onCharacterClick = goToCharacterDetails,
+        onCharacterClick = { characterId ->
+            viewModel.onCharacterClick(characterId)
+            goToCharacterDetails(characterId)
+        },
         stringResolve = viewModel::getString
     )
 }
@@ -33,7 +36,7 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: HomeUiState,
-    onCharacterClick: () -> Unit,
+    onCharacterClick: (Long) -> Unit,
     stringResolve: AppError.() -> String,
 ) {
     when (uiState) {

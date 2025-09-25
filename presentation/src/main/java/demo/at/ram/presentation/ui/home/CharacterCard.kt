@@ -21,12 +21,12 @@ import demo.at.ram.presentation.designsystem.theme.RickAndMortyTheme
 import demo.at.ram.presentation.designsystem.view.ImageWithStates
 
 @Composable
-fun CharacterCard(character: Character, onCharacterClick: () -> Unit) {
+fun CharacterCard(character: Character, onCharacterClick: (Long) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        onClick = onCharacterClick,
+        onClick = { onCharacterClick(character.id) },
         shape = RoundedCornerShape(16.dp)
     ) {
         Row {
@@ -46,7 +46,7 @@ fun CharacterCard(character: Character, onCharacterClick: () -> Unit) {
 @Composable
 fun CharacterCardList(
     characters: List<Character>,
-    onCharacterClick: () -> Unit
+    onCharacterClick: (Long) -> Unit
 ) {
     LazyColumn {
         items(characters.size) { index ->

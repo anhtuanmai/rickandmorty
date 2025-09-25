@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Character(
     @SerializedName("id")
-    var id: Long? = null,
+    var id: Long,
     @SerializedName("name")
     var name: String? = null,
     @SerializedName("status")

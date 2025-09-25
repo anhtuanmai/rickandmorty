@@ -46,5 +46,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onCharacterClick(characterId: Long) {
+        Timber.i("onCharacterClick : $characterId")
+
+    }
+
     fun getString(error: AppError): String = errorMessageResolver.resolveErrorMessage(error)
 }

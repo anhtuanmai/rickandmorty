@@ -2,9 +2,11 @@ package demo.at.ram.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.toRoute
 import demo.at.ram.presentation.ui.RamAppState
 import demo.at.ram.presentation.ui.about.AboutScreen
 import demo.at.ram.presentation.ui.details.DetailsScreen
@@ -24,7 +26,7 @@ data object AboutRoute
 @Serializable
 data object HomeRoute
 @Serializable
-data object DetailRoute
+data class DetailRoute(val characterId: Long)
 
 @Composable
 fun RamNavHost(
@@ -40,11 +42,11 @@ fun RamNavHost(
         navigation<HomeBaseRoute>(startDestination = HomeRoute) {
             composable<HomeRoute> {
                 HomeScreen(
-                    goToCharacterDetails = { navController.navigate(DetailRoute) }
+                    goToCharacterDetails = { navController.navigate(DetailRoute(it)) }
                 )
             }
-            composable<DetailRoute> {
-                DetailsScreen()
+            composable<DetailRoute> { backStackEntry ->
+                DetailsScreen(backStackEntry.toRoute<DetailRoute>().characterId)
             }
         }
         composable<FavoriteRoute> {
