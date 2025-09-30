@@ -30,10 +30,10 @@ android {
     }
 
     buildTypes {
-        debug {
-            isDebuggable = true
-            isMinifyEnabled = false
-        }
+//        debug {
+//            isDebuggable = true
+//            isMinifyEnabled = false
+//        }
         release {
             isMinifyEnabled = false
             proguardFiles(

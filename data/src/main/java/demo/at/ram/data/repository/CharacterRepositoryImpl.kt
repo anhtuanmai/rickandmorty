@@ -11,6 +11,9 @@ import demo.at.ram.shared.dispatcher.RamDispatchers.IO
 import demo.at.ram.shared.model.ResponseResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,18 +25,23 @@ class CharacterRepositoryImpl @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
 ) : CharacterRepository {
 
-    override suspend fun getAllCharacters(): ResponseResult<out List<Character>> {
-        val wrapper = remoteDataSource.getAllCharacters()
-        val characters = wrapper.response?.body()?.results
-        if (wrapper.isSuccessful()) {
-            cache(characters)
-            return ResponseResult.success(
-                code = wrapper.response?.code(),
-                data = characters?:emptyList()
-            )
-        } else {
-            return loadCharactersFromDb(wrapper.response?.code())
+    override suspend fun getAllCharacters(): Flow<ResponseResult<List<Character>>> {
+        return flow {
+            val wrapper = remoteDataSource.getAllCharacters()
+            val characters = wrapper.response?.body()?.results
+            if (wrapper.isSuccessful()) {
+                cache(characters)
+                emit(
+                    ResponseResult.success(
+                        code = wrapper.response?.code(),
+                        data = characters ?: emptyList()
+                    )
+                )
+            } else {
+                emit(loadCharactersFromDb(wrapper.response?.code()))
+            }
         }
+            .flowOn(ioDispatcher)
     }
 
     private fun cache(characters: List<Character>?) {
@@ -46,7 +54,7 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun loadCharactersFromDb(code: Int?): ResponseResult<out List<Character>> {
+    private suspend fun loadCharactersFromDb(code: Int?): ResponseResult<List<Character>> {
         val characters = localDataSource.loadCharacters().map { it.toDomainModel() }
         return if (characters.isNotEmpty()) {
             ResponseResult.success(code = null, data = characters)

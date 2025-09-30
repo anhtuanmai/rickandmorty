@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.apter.junit5)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -45,6 +46,34 @@ kotlin {
     }
 }
 
+// Setup protobuf configuration, generating lite Java and Kotlin classes
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
+androidComponents.beforeVariants {
+//    android.sourceSets.register(it.name) {
+    android.sourceSets.getByName(it.name) {
+        val buildDir = layout.buildDirectory.get().asFile
+        java.srcDir(buildDir.resolve("generated/source/proto/${it.name}/java"))
+        kotlin.srcDir(buildDir.resolve("generated/source/proto/${it.name}/kotlin"))
+    }
+}
+
 dependencies {
     implementation(project(":shared"))
     implementation(project(":domain"))
@@ -59,6 +88,10 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
     implementation(libs.timber)
+    implementation(libs.androidx.dataStore)
+    implementation(libs.androidx.dataStore.core)
+    implementation(libs.protobuf.kotlin.lite)
+//    implementation(libs.protobuf.javalite)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -82,4 +115,3 @@ afterEvaluate {
         jvmArgs("-XX:+EnableDynamicAgentLoading")
     }
 }
-

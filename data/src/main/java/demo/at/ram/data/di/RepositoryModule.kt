@@ -5,7 +5,11 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import demo.at.ram.data.repository.CharacterRepositoryImpl
+import demo.at.ram.data.repository.CompositeCharacterRepositoryImpl
+import demo.at.ram.data.repository.UserDataRepositoryImpl
 import demo.at.ram.domain.repository.CharacterRepository
+import demo.at.ram.domain.repository.CompositeCharacterRepository
+import demo.at.ram.domain.repository.UserDataRepository
 
 @Suppress("unused")
 @Module
@@ -13,6 +17,16 @@ import demo.at.ram.domain.repository.CharacterRepository
 abstract class RepositoryModule {
     @Binds
     abstract fun bindCharacterRepository(
-        characterRepositoryImpl: CharacterRepositoryImpl
+        characterRepo: CharacterRepositoryImpl
     ): CharacterRepository
+
+    @Binds
+    abstract fun bindUserDataRepository(
+        userDataRepo: UserDataRepositoryImpl
+    ): UserDataRepository
+
+    @Binds
+    abstract fun bindCompositeCharacterRepository(
+        compositeRepo: CompositeCharacterRepositoryImpl
+    ): CompositeCharacterRepository
 }
