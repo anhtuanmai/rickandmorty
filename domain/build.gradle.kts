@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.android.ksp)
+//    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.serialization)
@@ -40,12 +41,13 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    api(project(":shared"))
+
+    ksp(libs.hilt.compiler)
+//    kapt(libs.hilt.compiler)
 
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
     implementation(libs.gson)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.kotlinx.serialization.json)

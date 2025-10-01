@@ -73,3 +73,10 @@ sealed class AppError : Exception() {
         }
     }
 }
+
+fun Throwable.toAppError() : AppError {
+    return when (this) {
+        is AppError -> this
+        else -> AppError.GeneralError.Unknown(this.message ?: "")
+    }
+}

@@ -1,12 +1,14 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.android.ksp)
+//    alias(libs.plugins.kotlin.android.ksp)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.room)
     alias(libs.plugins.apter.junit5)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -34,6 +36,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -45,13 +48,44 @@ kotlin {
     }
 }
 
+// Setup protobuf configuration, generating lite Java and Kotlin classes
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
+}
+
+androidComponents.beforeVariants {
+    android.sourceSets.getByName(it.name) {
+        val buildDir = layout.buildDirectory.get().asFile
+        java.srcDir(buildDir.resolve("generated/source/proto/${it.name}/java"))
+        kotlin.srcDir(buildDir.resolve("generated/source/proto/${it.name}/kotlin"))
+    }
+}
+
 dependencies {
-    implementation(project(":shared"))
-    implementation(project(":domain"))
+    api(project(":domain"))
+
+//    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
+
+//    ksp(libs.room.compiler)
+    kapt(libs.room.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)
@@ -59,9 +93,11 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
     implementation(libs.timber)
-
+    implementation(libs.androidx.dataStore)
+    implementation(libs.androidx.dataStore.core)
+    api(libs.protobuf.kotlin.lite)
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+
 
     //Testing
     testImplementation(libs.kotlinx.coroutines.test)
@@ -75,11 +111,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-//EnableDynamicAgentLoading for Mockk
 afterEvaluate {
+    //EnableDynamicAgentLoading for Mockk
     tasks.named<Test>("testDebugUnitTest") {
         useJUnitPlatform()
         jvmArgs("-XX:+EnableDynamicAgentLoading")
     }
 }
-

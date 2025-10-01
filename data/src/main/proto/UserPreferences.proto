@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "DarkThemeConfig.proto";
+
+option java_package = "demo.at.ram.data.source.local.datastore";
+option java_multiple_files = true;
+
+message UserPreferences {
+  DarkThemeConfig dark_theme_config = 1;
+  repeated int64 deprecated_favorite_character_ids = 2;
+  map<int64, bool> favorite_character_ids = 3;
+}

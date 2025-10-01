@@ -10,7 +10,7 @@ data class ResponseResult<T>(
     val sourceOrigin: SourceOrigin = SourceOrigin.REMOTE,
 ) {
     companion object {
-        fun <T> success(data: T, code: Int? = null): ResponseResult<out T> {
+        fun <T> success(data: T, code: Int? = null): ResponseResult<T> {
             return ResponseResult(
                 isSuccessful = true,
                 httpCode = code,

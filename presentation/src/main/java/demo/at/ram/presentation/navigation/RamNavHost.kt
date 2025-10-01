@@ -2,6 +2,7 @@ package demo.at.ram.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +11,7 @@ import androidx.navigation.toRoute
 import demo.at.ram.presentation.ui.RamAppState
 import demo.at.ram.presentation.ui.about.AboutScreen
 import demo.at.ram.presentation.ui.details.DetailsScreen
+import demo.at.ram.presentation.ui.details.DetailsViewModel
 import demo.at.ram.presentation.ui.favorites.FavoritesScreen
 import demo.at.ram.presentation.ui.home.HomeScreen
 import kotlinx.serialization.Serializable
@@ -46,7 +48,14 @@ fun RamNavHost(
                 )
             }
             composable<DetailRoute> { backStackEntry ->
-                DetailsScreen(backStackEntry.toRoute<DetailRoute>().characterId)
+                val id = backStackEntry.toRoute<DetailRoute>().characterId.toString()
+                DetailsScreen(
+                    viewModel = hiltViewModel<DetailsViewModel, DetailsViewModel.Factory>(
+                        key = id
+                    ){ factory ->
+                        factory.create(id)
+                    }
+                )
             }
         }
         composable<FavoriteRoute> {

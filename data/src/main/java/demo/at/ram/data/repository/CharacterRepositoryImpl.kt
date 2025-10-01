@@ -11,6 +11,11 @@ import demo.at.ram.shared.dispatcher.RamDispatchers.IO
 import demo.at.ram.shared.model.ResponseResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -22,18 +27,31 @@ class CharacterRepositoryImpl @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
 ) : CharacterRepository {
 
-    override suspend fun getAllCharacters(): ResponseResult<out List<Character>> {
+    override suspend fun getAllCharacters(): ResponseResult<List<Character>> {
+        Timber.d("getAllCharacters")
         val wrapper = remoteDataSource.getAllCharacters()
         val characters = wrapper.response?.body()?.results
         if (wrapper.isSuccessful()) {
             cache(characters)
-            return ResponseResult.success(
-                code = wrapper.response?.code(),
-                data = characters?:emptyList()
+            return (
+                ResponseResult.success(
+                    code = wrapper.response?.code(),
+                    data = characters ?: emptyList()
+                )
             )
         } else {
-            return loadCharactersFromDb(wrapper.response?.code())
+            return (loadCharactersFromDb(wrapper.response?.code()))
         }
+    }
+
+    override suspend fun getSavedCharacters(): List<Character> {
+        Timber.d("getSavedCharacters")
+        return localDataSource.loadCharacters().map { it.toDomainModel() }
+    }
+
+    override suspend fun getCharacter(id: Long): Character? {
+        Timber.d("getCharacter")
+        return localDataSource.loadCharacters().find { it.id == id }?.toDomainModel()
     }
 
     private fun cache(characters: List<Character>?) {
@@ -46,7 +64,7 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun loadCharactersFromDb(code: Int?): ResponseResult<out List<Character>> {
+    private suspend fun loadCharactersFromDb(code: Int?): ResponseResult<List<Character>> {
         val characters = localDataSource.loadCharacters().map { it.toDomainModel() }
         return if (characters.isNotEmpty()) {
             ResponseResult.success(code = null, data = characters)
@@ -55,7 +73,4 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSavedCharacters(): List<Character> {
-        return localDataSource.loadCharacters().map { it.toDomainModel() }
-    }
 }
