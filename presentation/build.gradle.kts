@@ -62,9 +62,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":shared"))
     implementation(project(":data"))
-    implementation(project(":domain"))
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
 

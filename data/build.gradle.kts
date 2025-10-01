@@ -66,7 +66,6 @@ protobuf {
 }
 
 androidComponents.beforeVariants {
-//    android.sourceSets.register(it.name) {
     android.sourceSets.getByName(it.name) {
         val buildDir = layout.buildDirectory.get().asFile
         java.srcDir(buildDir.resolve("generated/source/proto/${it.name}/java"))
@@ -75,8 +74,7 @@ androidComponents.beforeVariants {
 }
 
 dependencies {
-    implementation(project(":shared"))
-    implementation(project(":domain"))
+    api(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.room.runtime)
@@ -90,7 +88,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.dataStore)
     implementation(libs.androidx.dataStore.core)
-    implementation(libs.protobuf.kotlin.lite)
+    api(libs.protobuf.kotlin.lite)
 //    implementation(libs.protobuf.javalite)
 
     implementation(libs.hilt.android)
@@ -108,8 +106,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-//EnableDynamicAgentLoading for Mockk
 afterEvaluate {
+    //EnableDynamicAgentLoading for Mockk
     tasks.named<Test>("testDebugUnitTest") {
         useJUnitPlatform()
         jvmArgs("-XX:+EnableDynamicAgentLoading")

@@ -40,7 +40,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":shared"))
+    api(project(":shared"))
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
