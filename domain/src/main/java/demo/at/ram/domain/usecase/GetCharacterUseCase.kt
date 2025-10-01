@@ -12,7 +12,8 @@ class GetCharacterUseCase @Inject constructor(
     private val characterRepository: CharacterRepository,
 ) {
     suspend operator fun invoke(id: Long): Character? {
-        Timber.d("GetCharacterUseCase invoked")
-        return characterRepository.getCharacter(id)
+        val character = characterRepository.getCharacter(id)
+        Timber.d("GetCharacterUseCase returned ${character?.name}")
+        return character
     }
 }

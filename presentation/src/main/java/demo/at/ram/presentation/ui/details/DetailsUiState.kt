@@ -8,5 +8,5 @@ sealed interface DetailsUiState {
 
     data class Error(val throwable: Throwable) : DetailsUiState
 
-    data class Success(val character: Character) : DetailsUiState
+    data class Success(val character: Character, val isFavorite: Boolean) : DetailsUiState
 }

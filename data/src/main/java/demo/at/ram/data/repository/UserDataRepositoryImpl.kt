@@ -12,6 +12,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.stateIn
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserDataRepositoryImpl @Inject constructor(
@@ -20,15 +23,19 @@ class UserDataRepositoryImpl @Inject constructor(
     @ApplicationScope private val applicationScope: CoroutineScope,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
 ) : UserDataRepository {
+
+    //TODO: upgrade to Flow
     override suspend fun getFavorites(): List<Long> {
-        TODO("Not yet implemented")
+        val ids = userPreferencesDataSource.userData.stateIn(applicationScope).value.favoriteCharacterIds
+        Timber.d("ids = $ids")
+        return ids
     }
 
     override suspend fun addFavorite(characterId: Long) {
-        TODO("Not yet implemented")
+        userPreferencesDataSource.setFavorite(characterId)
     }
 
     override suspend fun removeFavorite(characterId: Long) {
-        TODO("Not yet implemented")
+        userPreferencesDataSource.unsetFavorite(characterId)
     }
 }

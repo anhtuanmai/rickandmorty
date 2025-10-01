@@ -1,6 +1,6 @@
 package demo.at.ram.domain.model
 
-enum class DarkThemeConfig {
+enum class DarkTheme {
     FOLLOW_SYSTEM,
     LIGHT,
     DARK,

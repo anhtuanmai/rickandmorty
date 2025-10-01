@@ -7,5 +7,6 @@ option java_multiple_files = true;
 
 message UserPreferences {
   DarkThemeConfig dark_theme_config = 1;
-  repeated int32 favorited_character_ids = 2;
+  repeated int64 deprecated_favorite_character_ids = 2;
+  map<int64, bool> favorite_character_ids = 3;
 }
