@@ -7,17 +7,16 @@ import dagger.hilt.components.SingletonComponent
 import demo.at.ram.shared.dispatcher.Dispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import demo.at.ram.shared.dispatcher.RamDispatchers.IO
-import demo.at.ram.shared.dispatcher.RamDispatchers.Default
+import demo.at.ram.shared.dispatcher.RamDispatchers
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DispatchersModule {
     @Provides
-    @Dispatcher(IO)
+    @Dispatcher(RamDispatchers.IO)
     fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 
     @Provides
-    @Dispatcher(Default)
+    @Dispatcher(RamDispatchers.Default)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 }

@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.android.ksp)
+//    alias(libs.plugins.kotlin.android.ksp)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.room)
@@ -35,6 +36,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -76,9 +78,14 @@ androidComponents.beforeVariants {
 dependencies {
     api(project(":domain"))
 
+//    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
+
+//    ksp(libs.room.compiler)
+    kapt(libs.room.compiler)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.kotlin.serialization)
     implementation(libs.kotlinx.serialization.json)
@@ -89,10 +96,8 @@ dependencies {
     implementation(libs.androidx.dataStore)
     implementation(libs.androidx.dataStore.core)
     api(libs.protobuf.kotlin.lite)
-//    implementation(libs.protobuf.javalite)
-
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+
 
     //Testing
     testImplementation(libs.kotlinx.coroutines.test)

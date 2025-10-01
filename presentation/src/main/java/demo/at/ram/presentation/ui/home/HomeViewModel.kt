@@ -13,6 +13,7 @@ import demo.at.ram.shared.model.SourceOrigin
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -26,7 +27,9 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiState: StateFlow<HomeUiState> =
-        getAllCharactersUseCase.invoke()
+        flow {
+            emit(getAllCharactersUseCase.invoke())
+        }
             .map<ResponseResult<List<Character>>, HomeUiState> { wrapper ->
                 if (wrapper.isSuccessful) {
                     HomeUiState.Success(
@@ -52,10 +55,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getAppError(httpCode: Int?): AppError {
-        httpCode?.let {
-            return AppError.NetworkError.HttpError(it)
-        } ?: run {
-            return AppError.GeneralError.UnexpectedError
+        return if (httpCode == null) {
+            AppError.GeneralError.UnexpectedError
+        } else {
+            AppError.NetworkError.HttpError(httpCode)
         }
     }
 

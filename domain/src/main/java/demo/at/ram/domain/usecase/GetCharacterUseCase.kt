@@ -9,10 +9,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class GetCharacterUseCase @Inject constructor(
-    private val compositeCharacterRepository: CompositeCharacterRepository,
+    private val characterRepository: CharacterRepository,
 ) {
-    operator fun invoke(id: Long): Flow<Character> {
+    suspend operator fun invoke(id: Long): Character? {
         Timber.d("GetCharacterUseCase invoked")
-        return compositeCharacterRepository.getCharacter(id)
+        return characterRepository.getCharacter(id)
     }
 }

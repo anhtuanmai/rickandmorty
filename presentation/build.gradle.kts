@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.android.ksp)
+//    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization)
@@ -30,10 +31,6 @@ android {
     }
 
     buildTypes {
-//        debug {
-//            isDebuggable = true
-//            isMinifyEnabled = false
-//        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -64,9 +61,13 @@ kotlin {
 dependencies {
     implementation(project(":data"))
 
+    ksp(libs.hilt.compiler)
+//    kapt(libs.hilt.compiler)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
 
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.crashlytics)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material.iconsExtended)
@@ -79,14 +80,10 @@ dependencies {
     implementation(libs.coil.kt.compose)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.timber)
-    implementation(libs.kotlinx.serialization.json)
-
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
 
     //Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -99,6 +96,8 @@ dependencies {
     androidTestImplementation(libs.androidx.test.rules)
 
     kspAndroidTest(libs.dagger.hilt.compiler)
+//    kaptAndroidTest(libs.dagger.hilt.compiler)
+
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.kotlinx.coroutines.test)

@@ -5,7 +5,7 @@ import demo.at.ram.shared.model.ResponseResult
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataRepository {
-    fun getFavorites(): Flow<List<Long>>
+    suspend fun getFavorites(): List<Long>
 
     suspend fun addFavorite(characterId: Long)
 

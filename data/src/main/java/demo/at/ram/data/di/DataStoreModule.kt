@@ -9,6 +9,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import demo.at.ram.data.source.local.datastore.UserPreferences
+import demo.at.ram.data.source.local.datastore.UserPreferencesSerializer
 import demo.at.ram.shared.di.ApplicationScope
 import demo.at.ram.shared.dispatcher.Dispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,6 +31,7 @@ object DataStoreModule {
         @ApplicationScope scope: CoroutineScope
     ): DataStore<UserPreferences> {
         return DataStoreFactory.create(
+            serializer = UserPreferencesSerializer(),
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher)
         ) {
             context.dataStoreFile("user_preferences.pb")

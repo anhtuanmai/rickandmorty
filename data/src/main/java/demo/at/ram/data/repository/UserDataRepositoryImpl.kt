@@ -20,17 +20,15 @@ class UserDataRepositoryImpl @Inject constructor(
     @ApplicationScope private val applicationScope: CoroutineScope,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
 ) : UserDataRepository {
-    override fun getFavorites(): Flow<ResponseResult<List<Character>>> {
-        return userPreferencesDataSource.userData.combine(characterLocalDataSource.loadCharacters()) { userData ->
-
-        }
-    }
-
-    override suspend fun addFavorite(character: Character) {
+    override suspend fun getFavorites(): List<Long> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun removeFavorite(character: Character) {
+    override suspend fun addFavorite(characterId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun removeFavorite(characterId: Long) {
         TODO("Not yet implemented")
     }
 }

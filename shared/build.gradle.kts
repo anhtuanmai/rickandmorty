@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.android.ksp)
+//    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.serialization)
 }
@@ -41,12 +42,12 @@ kotlin {
 }
 
 dependencies {
+    ksp(libs.hilt.compiler)
+//    kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.serialization.json)
-
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
 
     //Testing
     testImplementation(libs.junit.jupiter.api)

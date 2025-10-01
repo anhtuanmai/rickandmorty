@@ -4,5 +4,5 @@ import demo.at.ram.domain.model.Character
 import kotlinx.coroutines.flow.Flow
 
 interface CompositeCharacterRepository {
-    fun getCharacter(id: Long): Flow<Character>
+    suspend fun getFavorites(): List<Character>
 }
