@@ -12,9 +12,12 @@ class CompositeCharacterRepositoryImpl @Inject constructor(
     private val characterRepository: CharacterRepository,
     private val userDataRepository: UserDataRepository,
 ) : CompositeCharacterRepository {
-    override suspend fun getFavorites(): List<Character> {
-        val saved = characterRepository.getSavedCharacters()
-        val ids = userDataRepository.getFavorites()
-        return saved.filter { ids.contains(it.id) }
-    }
+
+    override fun getFavorites(): Flow<List<Character>> =
+        combine(
+            flow = characterRepository.getSavedCharacters(),
+            flow2 = userDataRepository.getFavorites()
+        ) { characters, favorites ->
+            characters.filter { it.id in favorites }
+        }
 }

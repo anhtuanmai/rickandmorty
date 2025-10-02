@@ -13,10 +13,8 @@ import demo.at.ram.shared.model.SourceOrigin
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,9 +25,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiState: StateFlow<HomeUiState> =
-        flow {
-            emit(getAllCharactersUseCase.invoke())
-        }
+        getAllCharactersUseCase.invoke()
             .map<ResponseResult<List<Character>>, HomeUiState> { wrapper ->
                 if (wrapper.isSuccessful) {
                     HomeUiState.Success(
@@ -46,13 +42,6 @@ class HomeViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = HomeUiState.Loading
             )
-
-    fun getAllCharacters() {
-        viewModelScope.launch {
-            Timber.d("getAllCharacters")
-            getAllCharactersUseCase.invoke()
-        }
-    }
 
     private fun getAppError(httpCode: Int?): AppError {
         return if (httpCode == null) {

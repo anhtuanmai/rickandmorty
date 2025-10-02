@@ -1,31 +1,21 @@
 package demo.at.ram.presentation.ui.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import demo.at.ram.domain.error.AppError
-import demo.at.ram.domain.model.Character
-import timber.log.Timber
 
 @Composable
 fun HomeScreen(
     goToCharacterDetails: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        Timber.i("LaunchedEffect : viewModel.getAllCharacters")
-        viewModel.getAllCharacters()
-    }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     HomeContent(
-        uiState = uiState.value,
+        uiState = uiState,
         onCharacterClick = { characterId ->
             viewModel.onCharacterClick(characterId)
             goToCharacterDetails(characterId)

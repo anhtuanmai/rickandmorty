@@ -9,12 +9,12 @@ interface CharacterRepository {
     /**
      * Get all characters from remote
      */
-    suspend fun getAllCharacters(): ResponseResult<List<Character>>
+    fun getAllCharacters(): Flow<ResponseResult<List<Character>>>
 
     /**
      * Get all characters from local
      */
-    suspend fun getSavedCharacters(): List<Character>
+    fun getSavedCharacters(): Flow<List<Character>>
 
-    suspend fun getCharacter(id: Long): Character?
+    fun getCharacter(id: Long): Flow<Character>
 }
