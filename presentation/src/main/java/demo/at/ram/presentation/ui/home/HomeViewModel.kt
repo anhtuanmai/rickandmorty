@@ -10,9 +10,12 @@ import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.usecase.GetAllCharactersUseCase
 import demo.at.ram.shared.model.ResponseResult
 import demo.at.ram.shared.model.SourceOrigin
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
@@ -24,8 +27,15 @@ class HomeViewModel @Inject constructor(
     private val errorMessageResolver: ErrorMessageResolver,
 ) : ViewModel() {
 
+    private val refreshTrigger = MutableStateFlow(0)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<HomeUiState> =
-        getAllCharactersUseCase.invoke()
+        refreshTrigger
+            .flatMapLatest {
+                Timber.d("refreshTrigger flatMapLatest")
+                getAllCharactersUseCase.invoke()
+            }
             .map<ResponseResult<List<Character>>, HomeUiState> { wrapper ->
                 if (wrapper.isSuccessful) {
                     HomeUiState.Success(
@@ -53,6 +63,12 @@ class HomeViewModel @Inject constructor(
 
     fun onCharacterClick(characterId: Long) {
         Timber.i("onCharacterClick : $characterId")
+    }
+
+    fun refresh() {
+        Timber.i("refresh")
+        // Emit Unit to trigger refresh
+        refreshTrigger.value += 1
     }
 
     fun getString(error: AppError): String = errorMessageResolver.resolveErrorMessage(error)
