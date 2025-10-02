@@ -8,12 +8,11 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import demo.at.ram.domain.repository.UserDataRepository
 import demo.at.ram.domain.usecase.GetCharacterUseCase
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -26,45 +25,32 @@ class DetailsViewModel @AssistedInject constructor(
 
     val characterId: Long = injectedId.toLong()
 
-    fun toggleFavorite(isFavorite: Boolean) {
-        Timber.d("isFavorite = $isFavorite")
+    fun toggleFavorite(isFavorite: Boolean) =
         viewModelScope.launch {
+            Timber.d("isFavorite = $isFavorite")
             if (isFavorite) {
                 userDataRepository.addFavorite(characterId)
             } else {
                 userDataRepository.removeFavorite(characterId)
             }
-            getCharacter()
         }
-    }
 
-    private val _detailsUiState: MutableStateFlow<DetailsUiState> =
-        MutableStateFlow(DetailsUiState.Loading)
-    val detailsUiState: StateFlow<DetailsUiState> = _detailsUiState.asStateFlow()
-
-    fun getCharacter() {
-        viewModelScope.launch {
-            coroutineScope {
-                val deferred1 = async { getCharacterUseCase(characterId) }
-                val deferred2 = async { isFavorite(characterId) }
-                val character = deferred1.await()
-                Timber.i("getCharacter : character = ${character?.name}")
-                val isFavorite = deferred2.await()
-                Timber.i("getCharacter : isFavorite = $isFavorite")
-                val nextUiState = if (character != null) {
-                    DetailsUiState.Success(character = character, isFavorite = isFavorite)
-                } else {
-                    DetailsUiState.Error(Throwable("Character not found"))
-                }
-                _detailsUiState.emit(nextUiState)
-            }
+    val detailsUiState: StateFlow<DetailsUiState> =
+        combine(
+            flow = getCharacterUseCase.invoke(characterId),
+            flow2 = userDataRepository.getFavorites()
+        ) { character, favorites ->
+            DetailsUiState.Success(
+                character = character,
+                isFavorite = favorites.contains(character.id)
+            )
         }
-    }
-
-    private suspend fun isFavorite(characterId: Long): Boolean {
-        val favorites = userDataRepository.getFavorites()
-        return favorites.contains(characterId)
-    }
+            .distinctUntilChanged()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = DetailsUiState.Loading
+            )
 
     @AssistedFactory
     interface Factory {

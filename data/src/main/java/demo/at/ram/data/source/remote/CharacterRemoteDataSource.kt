@@ -14,6 +14,7 @@ class CharacterRemoteDataSource @Inject constructor(
     private val ramService: RamService,
 ) {
     suspend fun getAllCharacters(): ResponseWrapper<RestBody<Character>> {
+        Timber.d("getAllCharacters")
         return safeApiCall { ramService.getAllCharacters() }
     }
 }

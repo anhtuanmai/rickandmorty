@@ -11,9 +11,8 @@ import javax.inject.Inject
 class GetCharacterUseCase @Inject constructor(
     private val characterRepository: CharacterRepository,
 ) {
-    suspend operator fun invoke(id: Long): Character? {
+    operator fun invoke(id: Long): Flow<Character> {
         val character = characterRepository.getCharacter(id)
-        Timber.d("GetCharacterUseCase returned ${character?.name}")
         return character
     }
 }
