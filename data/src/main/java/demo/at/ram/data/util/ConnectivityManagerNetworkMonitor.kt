@@ -70,9 +70,6 @@ internal class ConnectivityManagerNetworkMonitor @Inject constructor(
 
     }
         .flowOn(ioDispatcher)
-        .onEach {
-            Timber.d("onEach: $it")
-        }
         .conflate()
 
     @Suppress("DEPRECATION")

@@ -9,6 +9,7 @@ import demo.at.ram.shared.di.ApplicationScope
 import demo.at.ram.shared.dispatcher.Dispatcher
 import demo.at.ram.shared.dispatcher.RamDispatchers
 import demo.at.ram.shared.model.ResponseResult
+import demo.at.ram.shared.model.SourceOrigin
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,6 +33,7 @@ class CharacterRepositoryImpl @Inject constructor(
             emit(remoteDataSource.getAllCharacters())
         }
             .flatMapLatest { wrapper ->
+                Timber.d("getAllCharacters = ${wrapper.javaClass.simpleName}")
                 val characters = wrapper.response?.body()?.results
                 if (wrapper.isSuccessful()) {
                     cache(characters)
@@ -75,7 +77,12 @@ class CharacterRepositoryImpl @Inject constructor(
     private suspend fun loadCharactersFromDb(code: Int?): ResponseResult<List<Character>> {
         val characters = localDataSource.loadCharacters().map { it.toDomainModel() }
         return if (characters.isNotEmpty()) {
-            ResponseResult.success(code = null, data = characters)
+            ResponseResult(
+                isSuccessful = true,
+                httpCode = null,
+                data = characters,
+                sourceOrigin = SourceOrigin.LOCAL
+            )
         } else {
             ResponseResult(isSuccessful = false, httpCode = code, data = null)
         }
