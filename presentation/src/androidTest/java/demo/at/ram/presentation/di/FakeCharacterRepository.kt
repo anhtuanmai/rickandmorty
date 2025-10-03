@@ -4,6 +4,8 @@ import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.model.Location
 import demo.at.ram.domain.repository.CharacterRepository
 import demo.at.ram.shared.model.ResponseResult
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class FakeCharacterRepository @Inject constructor() : CharacterRepository {
@@ -23,11 +25,19 @@ class FakeCharacterRepository @Inject constructor() : CharacterRepository {
         )
     )
 
-    override suspend fun getAllCharacters(): ResponseResult<out List<Character>> {
-        return ResponseResult.success(characters)
+    override fun getAllCharacters(): Flow<ResponseResult<List<Character>>> {
+        return flow {
+            emit(ResponseResult.success(characters))
+        }
     }
 
-    override suspend fun getSavedCharacters(): List<Character> {
-        return characters
+    override fun getSavedCharacters(): Flow<List<Character>> {
+        return flow {
+            emit(characters)
+        }
+    }
+
+    override fun getCharacter(id: Long): Flow<Character> {
+        throw UnsupportedOperationException()
     }
 }
