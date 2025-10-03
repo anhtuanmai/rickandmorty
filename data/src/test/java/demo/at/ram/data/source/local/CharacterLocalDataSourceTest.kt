@@ -46,7 +46,7 @@ class CharacterLocalDataSourceTest {
         val random = Random(36).nextLong(99999)
         val expectedCharacters = listOf(
             CharacterEntity(id = random, name = "Rick Sanchez"),
-            CharacterEntity(id = random + 1, name = "Morty Smith")
+            CharacterEntity(id = random + 1, name = "Morty Smith"),
         )
 
         // When 2
