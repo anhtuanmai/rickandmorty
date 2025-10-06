@@ -21,7 +21,7 @@ class CharacterEntity(
     }
 
     constructor(character: Character) : this(
-        id = character.id ?: -1,
+        id = character.id,
         name = character.name,
         status = character.status,
         species = character.species,
