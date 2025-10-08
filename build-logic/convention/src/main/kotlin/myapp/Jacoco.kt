@@ -62,6 +62,7 @@ internal fun Project.configureJacoco(
                 "create${variant.name.capitalize()}CombinedCoverageReport",
                 JacocoReport::class,
             ) {
+                dependsOn("test${variant.name.capitalize()}UnitTest")
 
                 classDirectories.setFrom(
                     allJars,
