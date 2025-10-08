@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.timber)
 
     //Testing
+    testImplementation(libs.turbine)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.kotlinx.coroutines.test)
