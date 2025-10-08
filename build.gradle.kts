@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     extra.apply {
-        set("jacocoVersion", "0.8.8")
+        set("jacocoVersion", libs.versions.jacoco.get().toString())
     }
 
     dependencies {

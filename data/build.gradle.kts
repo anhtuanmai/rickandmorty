@@ -1,15 +1,19 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+
 //    alias(libs.plugins.kotlin.android.ksp)
     alias(libs.plugins.kotlin.kapt)
+
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.room)
     alias(libs.plugins.apter.junit5)
     alias(libs.plugins.serialization)
     alias(libs.plugins.protobuf)
-    jacoco
+
+//    jacoco
+    alias(libs.plugins.myapp.android.library.jacoco)
 }
 
 android {
@@ -58,10 +62,6 @@ kotlin {
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
-}
-
-jacoco {
-    toolVersion = "0.8.8"
 }
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes
@@ -136,69 +136,27 @@ afterEvaluate {
     }
 }
 
-tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest")
-
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-        xml.outputLocation.set(file("${layout.buildDirectory}/reports/jacoco/jacoco.xml"))
-        html.outputLocation.set(file("${layout.buildDirectory}/reports/jacoco/html"))
-    }
-
-    val mainSrc = "$projectDir/src/main/java"
-    sourceDirectories.setFrom(files(mainSrc))
-
-    val exclusions = listOf(
-        "**/R.class",
-        "**/R\$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-        "**/*Test*.*",
-        "**/*\$WhenMappings.*",
-        "**/*\$serializer.*",
-        "**/*Screen*",
-        "**/di/**/*.*",
-        "**/databinding/**/*.*",
-        "**/*_Factory.*"
-    )
-
-    classDirectories.setFrom(
-        files(
-            fileTree("$buildDir/tmp/kotlin-classes/debug") {
-                exclude(exclusions)
-            }
-        )
-    )
-
-    executionData.setFrom(
-        fileTree(buildDir) {
-            include("**/*.exec")
-        }
-    )
-}
-
-tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
-    dependsOn("jacocoTestReport")
-
-    violationRules {
-        rule {
-            limit {
-                minimum = BigDecimal("0.80") // 80% coverage required
-            }
-        }
-        rule {
-            element = "CLASS"
-            limit {
-                counter = "LINE"
-                value = "COVEREDRATIO"
-                minimum = BigDecimal("0.70")
-            }
-            excludes = listOf(
-                "*.databinding.*",
-                "*.BuildConfig",
-                "*.*Test*"
-            )
-        }
-    }
-}
+//tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
+//    dependsOn("jacocoTestReport")
+//
+//    violationRules {
+//        rule {
+//            limit {
+//                minimum = BigDecimal("0.80") // 80% coverage required
+//            }
+//        }
+//        rule {
+//            element = "CLASS"
+//            limit {
+//                counter = "LINE"
+//                value = "COVEREDRATIO"
+//                minimum = BigDecimal("0.70")
+//            }
+//            excludes = listOf(
+//                "*.databinding.*",
+//                "*.BuildConfig",
+//                "*.*Test*"
+//            )
+//        }
+//    }
+//}
