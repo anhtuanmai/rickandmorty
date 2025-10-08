@@ -61,7 +61,7 @@ kotlin {
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = libs.versions.jacoco.get().toString()
 }
 
 // Setup protobuf configuration, generating lite Java and Kotlin classes
@@ -165,14 +165,14 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 
     classDirectories.setFrom(
         files(
-            fileTree("$buildDir/tmp/kotlin-classes/debug") {
+            fileTree("${layout.buildDirectory}/tmp/kotlin-classes/debug") {
                 exclude(exclusions)
             }
         )
     )
 
     executionData.setFrom(
-        fileTree(buildDir) {
+        fileTree(layout.buildDirectory) {
             include("**/*.exec")
         }
     )
