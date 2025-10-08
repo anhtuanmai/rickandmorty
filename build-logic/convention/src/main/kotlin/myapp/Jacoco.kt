@@ -17,43 +17,33 @@ import org.gradle.kotlin.dsl.withType
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
+import java.util.Locale
+import kotlin.text.get
+import kotlin.toString
 
-private val exclusions = listOf(
+private val coverageExclusions = listOf(
     // Android
     "**/R.class",
     "**/R\$*.class",
     "**/BuildConfig.*",
     "**/Manifest*.*",
-    "android/**/*.*",
-
-    // Hilt/Dagger
-    "**/*_Hilt*.*",
-    "**/Hilt_*.*",
-    "**/hilt_aggregated_deps/**",
-    "**/*_Factory.*",
-    "**/*_MembersInjector.*",
-    "**/*Module_*.*",
-
-    // DataBinding
-    "**/databinding/**",
-    "**/BR.*",
-
-    // Kotlin
-    "**/*\$WhenMappings.*",
-    "**/*\$serializer.*",
-
-    // DI (if appropriate for your project)
-    "**/di/**",
-
-    // Test classes only (not production classes with "Test" in name)
-    "**/*Test.class",
-    "**/*Tests.class",
+    "**/*_Hilt*.class",
+    "**/Hilt_*.class",
 )
 
 private fun String.capitalize() = replaceFirstChar {
-    if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString()
+    if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
 }
 
+/**
+ * Creates a new task that generates a combined coverage report with data from local and
+ * instrumented tests.
+ *
+ * `create{variant}CombinedCoverageReport`
+ *
+ * Note that coverage data must exist before running the task. This allows us to run device
+ * tests on CI using a different Github Action or an external device farm.
+ */
 internal fun Project.configureJacoco(
     androidComponentsExtension: AndroidComponentsExtension<*, *, *>,
 ) {
@@ -68,25 +58,22 @@ internal fun Project.configureJacoco(
         val allDirectories: ListProperty<Directory> =
             myObjFactory.listProperty(Directory::class.java)
         val reportTask =
-            tasks.register<JacocoReport>(
-                "create${variant.name.capitalize()}CoverageReport"
+            tasks.register(
+                "create${variant.name.capitalize()}CombinedCoverageReport",
+                JacocoReport::class,
             ) {
-                dependsOn("testDebugUnitTest")
 
                 classDirectories.setFrom(
                     allJars,
                     allDirectories.map { dirs ->
                         dirs.map { dir ->
-                            myObjFactory.fileTree().setDir(dir).exclude(exclusions)
+                            myObjFactory.fileTree().setDir(dir).exclude(coverageExclusions)
                         }
                     },
                 )
-
                 reports {
                     xml.required = true
                     html.required = true
-                    xml.outputLocation.set(file("${layout.buildDirectory}/reports/jacoco/jacoco.xml"))
-                    html.outputLocation.set(file("${layout.buildDirectory}/reports/jacoco/html"))
                 }
 
                 fun SourceDirectories.Flat?.toFilePaths(): Provider<List<String>> = this
@@ -103,6 +90,9 @@ internal fun Project.configureJacoco(
                 executionData.setFrom(
                     project.fileTree("$buildDir/outputs/unit_test_code_coverage/${variant.name}UnitTest")
                         .matching { include("**/*.exec") },
+
+                    project.fileTree("$buildDir/outputs/code_coverage/${variant.name}AndroidTest")
+                        .matching { include("**/*.ec") },
                 )
             }
 

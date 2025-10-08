@@ -10,6 +10,7 @@
 /.idea/deploymentTargetSelector.xml
 /.idea/libraries
 /.idea/modules.xml
+/.idea/compiler.xml
 /.idea/gradle.xml
 /.idea/kotlinc.xml
 /.idea/navEditor.xml
