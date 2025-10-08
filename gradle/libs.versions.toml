@@ -180,4 +180,5 @@ mannodermaus-android-junit5 = { id = "de.mannodermaus.android-junit5", version.r
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 room = { id = "androidx.room", version.ref = "room" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+jacoco = { id = "jacoco" }
 
