@@ -22,13 +22,86 @@ import kotlin.text.get
 import kotlin.toString
 
 private val coverageExclusions = listOf(
-    // Android
+    // Android generated classes
     "**/R.class",
     "**/R\$*.class",
     "**/BuildConfig.*",
     "**/Manifest*.*",
-    "**/*_Hilt*.class",
-    "**/Hilt_*.class",
+    "**/*\$ViewInjector*.*",
+    "**/*\$ViewBinder*.*",
+    "**/BR.*",
+    "android/**/*.*",
+
+    // AndroidX and Jetpack Compose generated
+    "androidx/**/*.*",
+    "**/*\$\$ExternalSyntheticLambda*.*",
+
+    // Kotlin
+    "**/*\$Companion.*",
+    "**/*\$Companion\$*.*",
+    "**/*\$WhenMappings.*",
+    "**/*\$EntriesKt.*",
+    "**/*\$inlined*.*",
+    "**/*\$\$*.*",  // Compose compiler generated
+
+    // Kotlin Serialization
+    "**/*\$serializer.*",
+    "**/*\$\$serializer.*",
+    "**/*Serializer.*",
+
+    // Dependency Injection - Hilt/Dagger
+    "**/*_HiltComponents*.*",
+    "**/*_HiltModules*.*",
+    "**/*_Hilt*.*",
+    "**/Hilt_*.*",
+    "**/*_Factory.*",
+    "**/*_Factory\$*.*",
+    "**/*_MembersInjector.*",
+    "**/*_MembersInjector\$*.*",
+    "**/*Module_*.*",
+    "**/*Dagger*.*",
+    "**/*_Provide*Factory.*",
+    "**/*_ComponentTreeDeps.*",
+    "**/hilt_aggregated_deps/**",
+    "**/dagger/**",
+    "**/di/**",
+
+    // DataBinding & ViewBinding
+    "**/databinding/**",
+    "**/DataBinderMapperImpl.*",
+    "**/DataBindingComponent.*",
+    "**/*Binding.*",
+    "**/*BindingImpl.*",
+
+    // Room Database generated
+    "**/*_Impl.*",
+    "**/*_Impl\$*.*",
+    "**/*Database_Impl*.*",
+
+    // Navigation generated
+    "**/*Args.*",
+    "**/*Args\$*.*",
+    "**/*Directions.*",
+    "**/*Directions\$*.*",
+
+    // Moshi generated adapters
+    "**/*JsonAdapter.*",
+    "**/*JsonAdapter\$*.*",
+
+    // Retrofit/OkHttp generated
+    "**/*\$\$Factory.*",
+
+    // Test files
+    "**/*Test.*",
+    "**/*Test\$*.*",
+    "**/*Tests.*",
+    "**/*Spec.*",
+    "**/test/**",
+    "**/androidTest/**",
+
+    // BuildSrc/build-logic
+    "**/buildSrc/**",
+    "**/build-logic/**",
 )
 
 private fun String.capitalize() = replaceFirstChar {
@@ -64,6 +137,8 @@ internal fun Project.configureJacoco(
             ) {
                 dependsOn("test${variant.name.capitalize()}UnitTest")
 
+                println("coverageExclusions = ${coverageExclusions.size}")
+
                 classDirectories.setFrom(
                     allJars,
                     allDirectories.map { dirs ->
@@ -75,6 +150,12 @@ internal fun Project.configureJacoco(
                 reports {
                     xml.required = true
                     html.required = true
+                    xml.outputLocation.set(
+                        layout.buildDirectory.file("reports/jacoco/${variant.name}/jacoco.xml")
+                    )
+                    html.outputLocation.set(
+                        layout.buildDirectory.dir("reports/jacoco/${variant.name}/html")
+                    )
                 }
 
                 fun SourceDirectories.Flat?.toFilePaths(): Provider<List<String>> = this
