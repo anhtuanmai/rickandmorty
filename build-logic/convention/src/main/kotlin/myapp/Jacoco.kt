@@ -18,8 +18,6 @@ import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import java.util.Locale
-import kotlin.text.get
-import kotlin.toString
 
 private val coverageExclusions = listOf(
     // Android generated classes
@@ -136,8 +134,6 @@ internal fun Project.configureJacoco(
                 JacocoReport::class,
             ) {
                 dependsOn("test${variant.name.capitalize()}UnitTest")
-
-                println("coverageExclusions = ${coverageExclusions.size}")
 
                 classDirectories.setFrom(
                     allJars,
