@@ -1,15 +1,15 @@
-package demo.at.ram.domain
+package demo.at.ram.shared
 
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
 
-class ExampleInstrumentedTest {
+class CheckInstrumentedTest {
     @Test
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("demo.at.ram.domain.test", appContext.packageName)
+        assertEquals("demo.at.ram.shared.test", appContext.packageName)
     }
 }

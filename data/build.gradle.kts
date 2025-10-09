@@ -50,6 +50,7 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            isReturnDefaultValues = true
         }
     }
 
@@ -98,6 +99,7 @@ dependencies {
     kapt(libs.hilt.compiler)
 
 //    ksp(libs.room.compiler)
+    //noinspection KaptUsageInsteadOfKsp
     kapt(libs.room.compiler)
 
     implementation(libs.androidx.core.ktx)

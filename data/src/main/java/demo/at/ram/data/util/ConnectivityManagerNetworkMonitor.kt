@@ -7,8 +7,6 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.net.NetworkRequest.Builder
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import androidx.core.content.getSystemService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import demo.at.ram.shared.dispatcher.Dispatcher
@@ -19,8 +17,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 import javax.inject.Inject
 
 internal class ConnectivityManagerNetworkMonitor @Inject constructor(
@@ -62,7 +58,7 @@ internal class ConnectivityManagerNetworkMonitor @Inject constructor(
         /**
          * Sends the latest connectivity status to the underlying channel.
          */
-        channel.trySend(connectivityManager.isCurrentlyConnected())
+        channel.trySend(ConnectivityManagerHelper.isCurrentlyConnected(connectivityManager))
 
         awaitClose {
             connectivityManager.unregisterNetworkCallback(callback)
@@ -71,14 +67,4 @@ internal class ConnectivityManagerNetworkMonitor @Inject constructor(
     }
         .flowOn(ioDispatcher)
         .conflate()
-
-    @Suppress("DEPRECATION")
-    private fun ConnectivityManager.isCurrentlyConnected() = when {
-        VERSION.SDK_INT >= VERSION_CODES.M ->
-            activeNetwork
-                ?.let(::getNetworkCapabilities)
-                ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-
-        else -> activeNetworkInfo?.isConnected
-    } == true
 }
