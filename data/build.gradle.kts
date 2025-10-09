@@ -113,6 +113,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.dataStore)
     implementation(libs.androidx.dataStore.core)
+    implementation(libs.androidx.dataStore.preferences)
     api(libs.protobuf.kotlin.lite)
     implementation(libs.hilt.android)
 
