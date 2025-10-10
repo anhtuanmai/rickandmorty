@@ -138,28 +138,3 @@ afterEvaluate {
         jvmArgs("-XX:+EnableDynamicAgentLoading")
     }
 }
-
-//tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
-//    dependsOn("jacocoTestReport")
-//
-//    violationRules {
-//        rule {
-//            limit {
-//                minimum = BigDecimal("0.80") // 80% coverage required
-//            }
-//        }
-//        rule {
-//            element = "CLASS"
-//            limit {
-//                counter = "LINE"
-//                value = "COVEREDRATIO"
-//                minimum = BigDecimal("0.70")
-//            }
-//            excludes = listOf(
-//                "*.databinding.*",
-//                "*.BuildConfig",
-//                "*.*Test*"
-//            )
-//        }
-//    }
-//}
