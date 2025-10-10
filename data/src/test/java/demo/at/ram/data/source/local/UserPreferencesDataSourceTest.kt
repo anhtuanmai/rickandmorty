@@ -2,44 +2,32 @@ package demo.at.ram.data.source.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
-import androidx.datastore.core.FileStorage
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import demo.at.ram.data.source.local.datastore.UserPreferences
 import demo.at.ram.data.source.local.datastore.UserPreferencesSerializer
 import demo.at.ram.domain.model.DarkTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.io.CleanupMode
 import org.junit.jupiter.api.io.TempDir
-import org.robolectric.RuntimeEnvironment
-import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import java.io.File
-import kotlin.io.path.pathString
 
-@OptIn(ExperimentalCoroutinesApi::class)
-//@ExtendWith(RobolectricExtension::class)
 class UserPreferencesDataSourceTest {
 
     @TempDir(cleanup = CleanupMode.ALWAYS)
     private lateinit var tempDir: File
+
+    private val storageName = "test_storage.protobuf"
 
     private lateinit var dataStore: DataStore<UserPreferences>
 
@@ -51,66 +39,71 @@ class UserPreferencesDataSourceTest {
 
     @BeforeEach
     fun setUp() {
-        testDispatcher = UnconfinedTestDispatcher()
-        testScope = TestScope(testDispatcher + Job())
-        Dispatchers.setMain(testDispatcher)
-
-        // robolectric temp dir
-//        tempDir = File(RuntimeEnvironment.getTempDirectory().basePath.pathString)
-
-        assertTrue(tempDir.isDirectory)
-        println(this.javaClass.simpleName + ": tempDir = " + tempDir.canonicalPath)
-
-        val storageName = "test_storage.protobuf"
-
-        val prefName = "test_storage.preferences"
-        val pref = PreferenceDataStoreFactory.create { File(tempDir, prefName) }
-        assertTrue(File(tempDir, prefName).isFile)
+        testDispatcher = StandardTestDispatcher()
+        testScope = TestScope(testDispatcher)
 
         dataStore = DataStoreFactory.create(
             serializer = UserPreferencesSerializer(),
             produceFile = {
                 File(tempDir, storageName)
             },
-            scope = testScope,
         )
-        assertTrue(File(tempDir, storageName).isFile)
 
         userPreferences = UserPreferencesDataSource(dataStore)
     }
 
     @AfterEach
     fun tearDown() {
-        Dispatchers.resetMain()
         testScope.cancel()
     }
 
     @Test
-    fun getUserData() = testScope.runTest {
-//        advanceUntilIdle()
-        userPreferences.setDarkTheme(DarkTheme.DARK)
+    @DisplayName("Get user data with LIGHT theme")
+    fun `Get user data with LIGHT`() = testScope.runTest {
+        userPreferences.setDarkTheme(DarkTheme.LIGHT)
         val first = userPreferences.userData.first()
-//        advanceUntilIdle()
-        assertEquals(DarkTheme.DARK, first.darkTheme)
-
-//        userPreferences.userData.test {
-//            val item = awaitItem()
-//            assertTrue(item.favoriteCharacterIds.isEmpty())
-//            awaitComplete()
-//        }
+        assertEquals(DarkTheme.LIGHT, first.darkTheme)
     }
 
     @Test
-    fun setFavorite() = runTest(testDispatcher) {
-        assertEquals(5, 2 + 3)
+    @DisplayName("Get user data with DARK theme")
+    fun getDarkTheme() = testScope.runTest {
+        userPreferences.setDarkTheme(DarkTheme.DARK)
+        val first = userPreferences.userData.first()
+        assertEquals(DarkTheme.DARK, first.darkTheme)
     }
-//
-//    @Test
-//    fun unsetFavorite() = testScope.runTest {
-//    }
-//
-//    @Test
-//    fun setDarkTheme() = testScope.runTest {
-//    }
 
+    @Test
+    @DisplayName("Modify user data on theme")
+    fun `Modify user data`() = testScope.runTest {
+        userPreferences.setDarkTheme(DarkTheme.LIGHT)
+        val first = userPreferences.userData.first()
+        assertEquals(DarkTheme.LIGHT, first.darkTheme)
+
+        userPreferences.setDarkTheme(DarkTheme.DARK)
+        val second = userPreferences.userData.first()
+        assertEquals(DarkTheme.DARK, second.darkTheme)
+    }
+
+    @Test
+    @DisplayName("Set/Unset favorites")
+    fun setUnsetFavorite() = testScope.runTest {
+        // Set favorite 1
+        userPreferences.setFavorite(1L)
+        val firstState = userPreferences.userData.first()
+        assertEquals(1, firstState.favoriteCharacterIds.size)
+        assertTrue(firstState.favoriteCharacterIds.contains(1L))
+
+        // Set favorite 2
+        userPreferences.setFavorite(2L)
+        val secondState = userPreferences.userData.first()
+        assertEquals(2, secondState.favoriteCharacterIds.size)
+        assertTrue(secondState.favoriteCharacterIds.containsAll(listOf(1L, 2L)))
+
+        // Unset favorite 1
+        userPreferences.unsetFavorite(2L)
+        val thirdState = userPreferences.userData.first()
+        assertEquals(1, thirdState.favoriteCharacterIds.size)
+        assertFalse(thirdState.favoriteCharacterIds.contains(2L))
+    }
 }
