@@ -143,6 +143,7 @@ internal fun Project.configureJacoco(
                         }
                     },
                 )
+
                 reports {
                     xml.required = true
                     html.required = true
@@ -196,3 +197,9 @@ internal fun Project.configureJacoco(
         }
     }
 }
+
+//internal fun Project.jacocoTestCoverageVerification(
+//    androidComponentsExtension: AndroidComponentsExtension<*, *, *>,
+//) {
+//
+//}

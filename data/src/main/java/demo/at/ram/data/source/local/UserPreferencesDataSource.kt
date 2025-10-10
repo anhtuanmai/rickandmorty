@@ -40,6 +40,14 @@ class UserPreferencesDataSource @Inject constructor(
         }
     }
 
+    suspend fun setDarkTheme(darkTheme: DarkTheme) {
+        userPreferences.updateData {
+            it.copy {
+                darkThemeConfig = parseDarkThem(darkTheme)
+            }
+        }
+    }
+
     private fun parseDarkThemConfig(config: DarkThemeConfig): DarkTheme {
         return when (config) {
             DarkThemeConfig.DARK_THEME_CONFIG_LIGHT
@@ -50,6 +58,17 @@ class UserPreferencesDataSource @Inject constructor(
             DarkThemeConfig.DARK_THEME_CONFIG_FOLLOW_SYSTEM,
             DarkThemeConfig.UNRECOGNIZED
                 -> DarkTheme.FOLLOW_SYSTEM
+        }
+    }
+
+    private fun parseDarkThem(theme: DarkTheme): DarkThemeConfig {
+        return when (theme) {
+            DarkTheme.LIGHT
+                -> DarkThemeConfig.DARK_THEME_CONFIG_LIGHT
+            DarkTheme.DARK
+                -> DarkThemeConfig.DARK_THEME_CONFIG_DARK
+            DarkTheme.FOLLOW_SYSTEM
+                -> DarkThemeConfig.DARK_THEME_CONFIG_FOLLOW_SYSTEM
         }
     }
 }
