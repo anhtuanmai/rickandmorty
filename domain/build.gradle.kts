@@ -60,8 +60,8 @@ dependencies {
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
-    androidTestImplementation(libs.junit.jupiter.api)
-    androidTestImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.engine)
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
