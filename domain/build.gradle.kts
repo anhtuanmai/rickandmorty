@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.mannodermaus.android.junit5)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.myapp.android.library.jacoco)
 }
 
 android {
