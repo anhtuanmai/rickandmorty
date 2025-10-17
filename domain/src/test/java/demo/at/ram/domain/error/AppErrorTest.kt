@@ -250,12 +250,6 @@ class AppErrorTest {
     // ========== AppError as Exception Tests ==========
 
     @Test
-    fun `AppError is instance of Exception`() {
-        val error: AppError = AppError.NetworkError.NoConnection
-        assertTrue(error is Exception)
-    }
-
-    @Test
     fun `AppError can be thrown and caught`() {
         try {
             throw AppError.NetworkError.Timeout

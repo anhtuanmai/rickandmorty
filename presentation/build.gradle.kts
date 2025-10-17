@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
 
-    id("org.jetbrains.kotlinx.kover") version "0.9.3" //try Kover
+    alias(libs.plugins.myapp.android.application.jacoco)
 }
 
 android {

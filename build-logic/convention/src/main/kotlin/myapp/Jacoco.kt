@@ -19,7 +19,14 @@ import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import java.util.Locale
 
-private val coverageExclusions = listOf(
+val appExclusions = listOf(
+    "demo/at/ram/presentation/designsystem/*.*", // Design System
+    "demo/at/ram/presentation/ui/log/*.*", // Compose Log
+    "demo/at/ram/presentation/AppCore.class",
+    "demo/at/ram/presentation/RickAndMortyApplication.class",
+)
+
+val libExclusions = listOf(
     // Android generated classes
     "**/R.class",
     "**/R\$*.class",
@@ -102,6 +109,8 @@ private val coverageExclusions = listOf(
     "**/build-logic/**",
 )
 
+val coverageExclusions = libExclusions + appExclusions
+
 private fun String.capitalize() = replaceFirstChar {
     if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
 }
@@ -117,6 +126,7 @@ private fun String.capitalize() = replaceFirstChar {
  */
 internal fun Project.configureJacoco(
     androidComponentsExtension: AndroidComponentsExtension<*, *, *>,
+    withAndroidTest: Boolean = false,
 ) {
     configure<JacocoPluginExtension> {
         toolVersion = libs.findVersion("jacoco").get().toString()
@@ -134,9 +144,53 @@ internal fun Project.configureJacoco(
                 JacocoReport::class,
             ) {
                 dependsOn("test${variant.name.capitalize()}UnitTest")
+                if (withAndroidTest) {
+                    dependsOn("connected${variant.name.capitalize()}AndroidTest")
+                }
+
+                /** Debug jacoco
+                doFirst {
+                    logger.lifecycle("=== JaCoCo Coverage Report for ${variant.name} ===")
+                    logger.lifecycle("Project: ${project.name}")
+
+                    // Log JAR files
+                    logger.lifecycle("\nJAR files (${allJars.get().size}):")
+                    allJars.get().forEach { jar ->
+                        logger.lifecycle("  - ${jar.asFile.absolutePath}")
+                    }
+
+                    // Log directories
+                    logger.lifecycle("\nClass directories (${allDirectories.get().size}):")
+                    allDirectories.get().forEach { dir ->
+                        logger.lifecycle("  - ${dir.asFile.absolutePath}")
+                    }
+
+                    // Log source directories
+                    logger.lifecycle("\nSource directories:")
+                    sourceDirectories.files.forEach { source ->
+                        logger.lifecycle("  - ${source.absolutePath}")
+                    }
+
+                    // Log execution data files
+                    logger.lifecycle("\nExecution data files:")
+                    executionData.files.forEach { execFile ->
+                        if (execFile.exists()) {
+                            logger.lifecycle("   ${execFile.absolutePath} (${execFile.length()} bytes)")
+                        } else {
+                            logger.lifecycle("   ${execFile.absolutePath} (NOT FOUND)")
+                        }
+                    }
+                }
+                */
 
                 classDirectories.setFrom(
-                    allJars,
+                    allJars.map { jars ->
+                        jars.map { jar ->
+                            project.zipTree(jar.asFile).matching {
+                                exclude(coverageExclusions)
+                            }
+                        }
+                    },
                     allDirectories.map { dirs ->
                         dirs.map { dir ->
                             myObjFactory.fileTree().setDir(dir).exclude(coverageExclusions)
@@ -148,10 +202,10 @@ internal fun Project.configureJacoco(
                     xml.required = true
                     html.required = true
                     xml.outputLocation.set(
-                        layout.buildDirectory.file("reports/jacoco/${variant.name}/jacoco.xml")
+                        layout.buildDirectory.file("${rootDir}/build/reports/jacoco/${project.name}/${variant.name}/jacoco.xml")
                     )
                     html.outputLocation.set(
-                        layout.buildDirectory.dir("reports/jacoco/${variant.name}/html")
+                        layout.buildDirectory.dir("${rootDir}/build/reports/jacoco/${project.name}/${variant.name}/html")
                     )
                 }
 
