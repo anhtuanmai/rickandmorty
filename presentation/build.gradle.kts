@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.apter.junit5)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+
+    id("org.jetbrains.kotlinx.kover") version "0.9.3" //try Kover
 }
 
 android {
