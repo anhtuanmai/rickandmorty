@@ -197,9 +197,3 @@ internal fun Project.configureJacoco(
         }
     }
 }
-
-//internal fun Project.jacocoTestCoverageVerification(
-//    androidComponentsExtension: AndroidComponentsExtension<*, *, *>,
-//) {
-//
-//}
