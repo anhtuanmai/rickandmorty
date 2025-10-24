@@ -8,7 +8,9 @@ import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
 @HiltAndroidApp
-class RickAndMortyApplication : Application() {
+class RickAndMortyApplication : AppCore()
+
+open class AppCore : Application() {
 
     override fun onCreate() {
         super.onCreate()

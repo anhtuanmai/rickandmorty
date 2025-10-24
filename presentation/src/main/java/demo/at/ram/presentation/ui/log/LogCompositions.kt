@@ -7,6 +7,7 @@ import timber.log.Timber
 
 class Ref(var value: Int)
 
+@Suppress("NOTHING_TO_INLINE")
 @Composable
 inline fun LogCompositions(msg: String = "") {
     val ref = remember { Ref(0) }

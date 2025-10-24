@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.apter.junit5)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+
+    alias(libs.plugins.myapp.android.application.jacoco)
 }
 
 android {

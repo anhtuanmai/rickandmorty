@@ -39,13 +39,13 @@ googleOss = "17.1.0"
 googleOssPlugin = "0.10.8"
 hilt = "2.56"
 hiltExt = "1.2.0"
-jacoco = "0.8.12"
+jacoco = "0.8.14"
 kotlin = "2.2.20"
 kotlinxCoroutines = "1.10.1"
 kotlinxDatetime = "0.6.1"
 kotlinxSerializationJson = "1.8.0"
 kapt = "2.2.20"
-ksp = "2.2.20-2.0.4-SNAPSHOT"
+ksp = "2.2.20-2.0.4"
 okhttp = "4.12.0"
 protobuf = "4.29.2"
 protobufPlugin = "0.9.4"
@@ -192,4 +192,5 @@ room = { id = "androidx.room", version.ref = "room" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # Plugins defined by this project
+myapp-android-application-jacoco = { id = "myapp.android.application.jacoco" }
 myapp-android-library-jacoco = { id = "myapp.android.library.jacoco" }

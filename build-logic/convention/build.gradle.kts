@@ -50,10 +50,10 @@ gradlePlugin {
 //            id = libs.plugins.nowinandroid.android.application.asProvider().get().pluginId
 //            implementationClass = "AndroidApplicationConventionPlugin"
 //        }
-//        register("androidApplicationJacoco") {
-//            id = libs.plugins.nowinandroid.android.application.jacoco.get().pluginId
-//            implementationClass = "AndroidApplicationJacocoConventionPlugin"
-//        }
+        register("androidApplicationJacoco") {
+            id = libs.plugins.myapp.android.application.jacoco.get().pluginId
+            implementationClass = "AndroidApplicationJacocoConventionPlugin"
+        }
 //        register("androidLibraryCompose") {
 //            id = libs.plugins.nowinandroid.android.library.compose.get().pluginId
 //            implementationClass = "AndroidLibraryComposeConventionPlugin"

@@ -1,8 +1,8 @@
 package demo.at.ram.presentation.testConfig
 
 import dagger.hilt.android.testing.CustomTestApplication
-import demo.at.ram.presentation.RickAndMortyApplication
+import demo.at.ram.presentation.AppCore
 
 @Suppress("unused")
-@CustomTestApplication(RickAndMortyApplication::class)
+@CustomTestApplication(AppCore::class)
 interface RickAndMortyTestApplication
