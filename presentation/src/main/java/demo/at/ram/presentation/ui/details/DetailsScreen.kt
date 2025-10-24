@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.tools.screenshot.PreviewTest
 import demo.at.ram.domain.model.Character
+import demo.at.ram.domain.model.CharacterOrigin
 import demo.at.ram.domain.model.Location
 import demo.at.ram.presentation.designsystem.theme.RickAndMortyTheme
 import demo.at.ram.presentation.designsystem.view.ImageWithStates
@@ -89,10 +90,13 @@ fun DetailsScreenPreview() {
                     id = 1,
                     name = "Rick Sanchez",
                     status = "Alive",
+                    species = "Human",
+                    gender = "Male",
+                    origin = CharacterOrigin("Earth", null),
                     location = Location("Earth", null),
                     image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
                 ),
-                false
+                true
             )
         ) { isFavorite ->
             println("isFavorite = $isFavorite")
