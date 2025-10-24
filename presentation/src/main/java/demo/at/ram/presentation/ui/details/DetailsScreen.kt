@@ -45,8 +45,8 @@ fun DetailsScreen(
 internal fun DetailsContent(detailsUiState: DetailsUiState, toggleFavorite: (Boolean) -> Unit) {
     if (detailsUiState is DetailsUiState.Success) {
         LogCompositions("DetailsUiState.Success")
-        val character = (detailsUiState as DetailsUiState.Success).character
-        val isFavorite = (detailsUiState as DetailsUiState.Success).isFavorite
+        val character = detailsUiState.character
+        val isFavorite = detailsUiState.isFavorite
         Column(modifier = Modifier.padding(16.dp)) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                 LogCompositions("Box isFavorite")
