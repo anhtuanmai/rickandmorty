@@ -20,6 +20,7 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 import java.util.Locale
 
 val appExclusions = listOf(
+    "demo/at/ram/presentation/designsystem/**", // Design System
     "demo/at/ram/presentation/designsystem/*.*", // Design System
     "demo/at/ram/presentation/ui/log/*.*", // Compose Log
     "demo/at/ram/presentation/AppCore.class",

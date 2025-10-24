@@ -10,13 +10,16 @@ plugins {
     alias(libs.plugins.apter.junit5)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
-
+    alias(libs.plugins.screenshot)
     alias(libs.plugins.myapp.android.application.jacoco)
 }
 
 android {
     namespace = "demo.at.ram.presentation"
     compileSdk = 36
+
+    @Suppress("UnstableApiUsage")
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         applicationId = "demo.at.ram.presentation"
@@ -86,6 +89,10 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
+
+    implementation(libs.screenshot.validation.api)
+    screenshotTestImplementation(libs.screenshot.validation.api)
+    screenshotTestImplementation(libs.androidx.compose.ui.tooling)
 
     //Testing
     androidTestImplementation(platform(libs.androidx.compose.bom))

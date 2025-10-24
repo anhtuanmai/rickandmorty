@@ -14,10 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.android.tools.screenshot.PreviewTest
 import demo.at.ram.domain.model.Character
+import demo.at.ram.domain.model.Location
+import demo.at.ram.presentation.designsystem.theme.RickAndMortyTheme
 import demo.at.ram.presentation.designsystem.view.ImageWithStates
 import demo.at.ram.presentation.designsystem.view.RamIconToggleButton
 import demo.at.ram.presentation.ui.log.LogCompositions
@@ -37,7 +41,7 @@ fun DetailsScreen(
         LogCompositions("DetailsUiState.Success")
         val character = (detailsUiState as DetailsUiState.Success).character
         val isFavorite = (detailsUiState as DetailsUiState.Success).isFavorite
-        Column (modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                 LogCompositions("Box isFavorite")
                 RamIconToggleButton(
@@ -66,5 +70,22 @@ internal fun Character(character: Character) {
         Text(text = "Gender : ${character.gender}")
         Text(text = "Origin : ${character.origin?.name}")
         Text(text = "Location : ${character.location?.name}")
+    }
+}
+
+@PreviewTest
+@Preview(showBackground = true)
+@Composable
+fun CharacterPreview() {
+    RickAndMortyTheme {
+        Character(
+            Character(
+                id = 1,
+                name = "Rick Sanchez",
+                status = "Alive",
+                location = Location("Earth", null),
+                image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+            )
+        )
     }
 }
