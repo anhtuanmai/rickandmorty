@@ -37,6 +37,11 @@ fun DetailsScreen(
 
     val detailsUiState by viewModel.detailsUiState.collectAsStateWithLifecycle()
 
+    DetailsContent(detailsUiState, viewModel::toggleFavorite)
+}
+
+@Composable
+internal fun DetailsContent(detailsUiState: DetailsUiState, toggleFavorite: (Boolean) -> Unit) {
     if (detailsUiState is DetailsUiState.Success) {
         LogCompositions("DetailsUiState.Success")
         val character = (detailsUiState as DetailsUiState.Success).character
@@ -46,7 +51,7 @@ fun DetailsScreen(
                 LogCompositions("Box isFavorite")
                 RamIconToggleButton(
                     checked = isFavorite,
-                    onCheckedChange = viewModel::toggleFavorite,
+                    onCheckedChange = toggleFavorite,
                     icon = { Icon(Icons.Default.FavoriteBorder, null) },
                     checkedIcon = { Icon(Icons.Default.Favorite, null) },
                 )
@@ -74,6 +79,27 @@ internal fun Character(character: Character) {
 }
 
 @PreviewTest
+@Preview(showBackground = true, device = "id:pixel_7")
+@Composable
+fun DetailsScreenPreview() {
+    RickAndMortyTheme {
+        DetailsContent(
+            DetailsUiState.Success(
+                Character(
+                    id = 1,
+                    name = "Rick Sanchez",
+                    status = "Alive",
+                    location = Location("Earth", null),
+                    image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
+                ),
+                false
+            )
+        ) { isFavorite ->
+            println("isFavorite = $isFavorite")
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CharacterPreview() {
