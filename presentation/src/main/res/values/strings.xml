@@ -8,4 +8,10 @@
 
     <string name="no_connection">No connection</string>
 
+    <string name="label_name">Name</string>
+    <string name="label_status">Status</string>
+    <string name="label_species">Species</string>
+    <string name="label_gender">Gender</string>
+    <string name="label_origin">Origin</string>
+    <string name="label_location">Location</string>
 </resources>

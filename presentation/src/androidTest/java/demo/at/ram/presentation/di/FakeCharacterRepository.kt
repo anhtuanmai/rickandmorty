@@ -23,7 +23,12 @@ class FakeCharacterRepository @Inject constructor() : CharacterRepository {
         }
     }
 
+    /**
+     * @return search in [TestData.characters] or create new empty character if not found
+     */
     override fun getCharacter(id: Long): Flow<Character> {
-        throw UnsupportedOperationException()
+        return flow {
+            emit(characters.find { it.id == id } ?: Character(id))
+        }
     }
 }

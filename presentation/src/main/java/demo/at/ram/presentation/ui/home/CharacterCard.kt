@@ -51,10 +51,12 @@ fun CharacterCard(
 
 @Composable
 fun CharacterCardList(
+    modifier: Modifier = Modifier,
     characters: List<Character>,
-    onCharacterClick: (Long) -> Unit
+    onCharacterClick: (Long) -> Unit,
+    testTag: String = "characterList",
 ) {
-    LazyColumn(Modifier.testTag("characterList")) {
+    LazyColumn(modifier = modifier.testTag(testTag)) {
         items(count = characters.size) { index ->
             CharacterCard(
                 character = characters[index],
