@@ -33,6 +33,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -95,6 +96,8 @@ dependencies {
     screenshotTestImplementation(libs.androidx.compose.ui.tooling)
 
     //Testing
+    debugImplementation(libs.androidx.compose.ui.testManifest)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.compose.ui.uiTestJunit4)
@@ -103,6 +106,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.mockk)
 
     kspAndroidTest(libs.dagger.hilt.compiler)
 //    kaptAndroidTest(libs.dagger.hilt.compiler)
