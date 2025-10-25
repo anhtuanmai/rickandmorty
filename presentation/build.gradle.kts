@@ -10,13 +10,16 @@ plugins {
     alias(libs.plugins.apter.junit5)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
-
+    alias(libs.plugins.screenshot)
     alias(libs.plugins.myapp.android.application.jacoco)
 }
 
 android {
     namespace = "demo.at.ram.presentation"
     compileSdk = 36
+
+    @Suppress("UnstableApiUsage")
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         applicationId = "demo.at.ram.presentation"
@@ -30,6 +33,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -87,7 +91,13 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
 
+    implementation(libs.screenshot.validation.api)
+    screenshotTestImplementation(libs.screenshot.validation.api)
+    screenshotTestImplementation(libs.androidx.compose.ui.tooling)
+
     //Testing
+    debugImplementation(libs.androidx.compose.ui.testManifest)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.compose.ui.uiTestJunit4)
@@ -96,6 +106,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.mockk)
 
     kspAndroidTest(libs.dagger.hilt.compiler)
 //    kaptAndroidTest(libs.dagger.hilt.compiler)

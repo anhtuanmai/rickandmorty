@@ -1,7 +1,6 @@
 package demo.at.ram.presentation.di
 
 import demo.at.ram.domain.model.Character
-import demo.at.ram.domain.model.Location
 import demo.at.ram.domain.repository.CharacterRepository
 import demo.at.ram.shared.model.ResponseResult
 import kotlinx.coroutines.flow.Flow
@@ -10,20 +9,7 @@ import javax.inject.Inject
 
 class FakeCharacterRepository @Inject constructor() : CharacterRepository {
 
-    private val characters = listOf(
-        Character(
-            id = 1,
-            name = "Rick Sanchez",
-            status = "Alive",
-            location = Location("Earth", null),
-        ),
-        Character(
-            id = 2,
-            name = "Morty Smith",
-            status = "Alive",
-            location = Location("Earth", null),
-        )
-    )
+    private val characters = TestData.characters
 
     override fun getAllCharacters(): Flow<ResponseResult<List<Character>>> {
         return flow {
@@ -37,7 +23,12 @@ class FakeCharacterRepository @Inject constructor() : CharacterRepository {
         }
     }
 
+    /**
+     * @return search in [TestData.characters] or create new empty character if not found
+     */
     override fun getCharacter(id: Long): Flow<Character> {
-        throw UnsupportedOperationException()
+        return flow {
+            emit(characters.find { it.id == id } ?: Character(id))
+        }
     }
 }

@@ -25,7 +25,7 @@ class DetailsViewModel @AssistedInject constructor(
 
     val characterId: Long = injectedId.toLong()
 
-    fun toggleFavorite(isFavorite: Boolean) =
+    fun toggleFavorite(isFavorite: Boolean) {
         viewModelScope.launch {
             Timber.d("isFavorite = $isFavorite")
             if (isFavorite) {
@@ -34,6 +34,7 @@ class DetailsViewModel @AssistedInject constructor(
                 userDataRepository.removeFavorite(characterId)
             }
         }
+    }
 
     val detailsUiState: StateFlow<DetailsUiState> =
         combine(
