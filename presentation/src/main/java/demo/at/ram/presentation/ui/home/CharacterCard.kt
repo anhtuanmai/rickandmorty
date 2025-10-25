@@ -20,7 +20,7 @@ import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.model.Location
 import demo.at.ram.presentation.designsystem.theme.RickAndMortyTheme
 import demo.at.ram.presentation.designsystem.view.ImageWithStates
-import timber.log.Timber
+import demo.at.ram.shared.annotation.ExcludeFromJacocoGeneratedReport
 
 @Composable
 fun CharacterCard(
@@ -65,6 +65,7 @@ fun CharacterCardList(
     }
 }
 
+@ExcludeFromJacocoGeneratedReport
 @Preview(showBackground = true, device = "id:pixel_8")
 @Composable
 fun CharacterCardPreview() {
@@ -89,6 +90,7 @@ fun CharacterCardPreview() {
     }
 }
 
+@ExcludeFromJacocoGeneratedReport
 @Preview(showBackground = true, device = "id:pixel_8")
 @Composable
 fun CharacterCardListPreview() {
