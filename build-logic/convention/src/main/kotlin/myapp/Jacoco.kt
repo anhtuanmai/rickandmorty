@@ -25,6 +25,8 @@ val appExclusions = listOf(
     "demo/at/ram/presentation/ui/log/*.*",  // Compose Log
     "demo/at/ram/presentation/AppCore.class",
     "demo/at/ram/presentation/RickAndMortyApplication.class",
+    "**/ComposableSingletons*", // Preview Compose
+
 )
 
 val libExclusions = listOf(
