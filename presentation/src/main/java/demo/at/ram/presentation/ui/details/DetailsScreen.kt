@@ -26,6 +26,7 @@ import demo.at.ram.presentation.designsystem.theme.RickAndMortyTheme
 import demo.at.ram.presentation.designsystem.view.ImageWithStates
 import demo.at.ram.presentation.designsystem.view.RamIconToggleButton
 import demo.at.ram.presentation.ui.log.LogCompositions
+import demo.at.ram.shared.annotation.ExcludeFromJacocoGeneratedReport
 
 /**
  * @param viewModel ViewModel injected via [DetailsViewModel.Factory]
@@ -79,6 +80,7 @@ internal fun Character(character: Character) {
     }
 }
 
+@ExcludeFromJacocoGeneratedReport
 @PreviewTest
 @Preview(showBackground = true, device = "id:pixel_7")
 @Composable
@@ -104,6 +106,7 @@ fun DetailsScreenPreview() {
     }
 }
 
+@ExcludeFromJacocoGeneratedReport
 @Preview(showBackground = true)
 @Composable
 fun CharacterPreview() {

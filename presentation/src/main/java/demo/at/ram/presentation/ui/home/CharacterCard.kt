@@ -13,17 +13,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import demo.at.ram.domain.model.Character
 import demo.at.ram.domain.model.Location
 import demo.at.ram.presentation.designsystem.theme.RickAndMortyTheme
 import demo.at.ram.presentation.designsystem.view.ImageWithStates
+import timber.log.Timber
 
 @Composable
-fun CharacterCard(character: Character, onCharacterClick: (Long) -> Unit) {
+fun CharacterCard(
+    character: Character,
+    modifier: Modifier = Modifier,
+    onCharacterClick: (Long) -> Unit
+) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(8.dp),
         onClick = { onCharacterClick(character.id) },
@@ -48,9 +54,13 @@ fun CharacterCardList(
     characters: List<Character>,
     onCharacterClick: (Long) -> Unit
 ) {
-    LazyColumn {
-        items(characters.size) { index ->
-            CharacterCard(characters[index], onCharacterClick)
+    LazyColumn(Modifier.testTag("characterList")) {
+        items(count = characters.size) { index ->
+            CharacterCard(
+                character = characters[index],
+                modifier = Modifier.testTag("item_${characters[index].id}"),
+                onCharacterClick = onCharacterClick
+            )
         }
     }
 }
